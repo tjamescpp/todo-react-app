@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import Button from './components/Button';
+import Content from './components/Content';
+import Icon from './components/Icon';
+import Sidebar from './components/Sidebar';
+import SidebarHeader from './components/SidebarHeader';
+import SidebarList from './components/SidebarList';
+import { users, sidebarButtons, projectButtons } from './data.js';
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <div id="container">
+            <Sidebar>
+                <SidebarHeader user={users[0]} />
+                <SidebarList listId="sidebarList" buttons={sidebarButtons} />
+                <div id="projectsSidebar">
+                    <p id="projectListHeader">Projects</p>
+                    <Button
+                        className="sidebarBtn"
+                        type="button"
+                        id="newProjectBtn"
+                    >
+                        <Icon
+                            className="sidebarIcons"
+                            src="/icons/plus.svg"
+                            alt="plus"
+                        />
+                        <p>New project</p>
+                    </Button>
+                    <SidebarList
+                        listId="projectSidebarList"
+                        buttons={projectButtons}
+                    />
+                </div>
+            </Sidebar>
+            <Content></Content>
+        </div>
+    );
 }
 
-export default App
+export default App;
