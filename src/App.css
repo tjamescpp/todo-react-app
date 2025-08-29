@@ -320,7 +320,7 @@ textarea {
     min-width: 700px;
 }
 
-#to-do-list {
+#toDoList {
     display: flex;
     flex-direction: column;
     width: clamp(600px, 50%, 700px);
@@ -329,7 +329,7 @@ textarea {
     padding: 40px;
 }
 
-#content-header {
+#contentHeader {
     font-size: 1.5rem;
     font-weight: 650;
 }
@@ -346,17 +346,17 @@ textarea {
     color: var(--button-red-hover);
 }
 
-.content-icons {
+.contentIcons {
     width: 30px;
     height: 30px;
 }
 
-.project-header {
+.projectHeader {
     display: flex;
     align-items: center;
 }
 
-.list-expand-collapse {
+.listExpandCollapse {
     width: 35px;
     height: 35px;
     background-color: var(--main-bg);
@@ -378,7 +378,7 @@ textarea {
     gap: 16px;
 }
 
-.project-title {
+.projectTitle {
     padding: 8px;
     font-size: 1.2rem;
     font-weight: 500;
