@@ -46,6 +46,13 @@ export default function Project({ id, projectName }) {
         setIsExpanded(!isExpanded);
     };
 
+    // convert to useEffect when the app is connected to a server
+    const showTaskList = () => {
+        if (isExpanded) {
+            return <TaskList tasks={tasks} id={'allList'} />;
+        }
+    };
+
     return (
         <div className="project" id={id}>
             <ProjectHeader
@@ -54,7 +61,7 @@ export default function Project({ id, projectName }) {
                 iconSrc={isExpanded ? icons.expand : icons.collapse}
                 onClick={handleExpand}
             />
-            <TaskList tasks={tasks} id={'allList'} />
+            {showTaskList()}
         </div>
     );
 }
