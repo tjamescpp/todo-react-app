@@ -74,7 +74,7 @@
 
 /* --- ADD TASK --- */
 
-#add-task-form {
+#addTaskForm {
     display: none;
     position: absolute;
     top: 3rem;
@@ -103,28 +103,28 @@ textarea {
     resize: none;
 }
 
-#task-title-input,
-#task-description-text,
-#task-date-input {
+#taskTitleInput,
+#taskDescriptionText,
+#taskDateInput {
     border: none;
 }
 
-#task-title-input {
+#taskTitleInput {
     font-size: 1.1rem;
 }
 
-#task-date-input {
+#taskDateInput {
     background-color: var(--button-gray);
     border-radius: 5px;
     height: 23px;
     cursor: pointer;
 }
 
-#task-date-input:hover {
+#taskDateInput:hover {
     background-color: darkgray;
 }
 
-#project-list {
+#projectList {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -136,7 +136,7 @@ textarea {
     margin-left: 14px;
 }
 
-#project-list li > input {
+#projectList li > input {
     width: 100%;
     background-color: white;
     border: none;
@@ -146,11 +146,11 @@ textarea {
     padding: 6px;
 }
 
-#project-list li > input:hover {
+#projectList li > input:hover {
     background-color: var(--button-gray);
 }
 
-#project-btn {
+#projectBtn {
     display: flex;
     justify-content: center;
     width: 100px;
@@ -160,25 +160,25 @@ textarea {
     background-color: var(--button-gray);
 }
 
-#project-btn:hover {
+#projectBtn:hover {
     background-color: darkgray;
 }
 
-#project-dropdown {
+#projectDropdown {
     display: flex;
     align-items: center;
 }
 
-#project-menu-icon {
+#projectMenuIcon {
     width: 25px;
     height: 25px;
 }
 
-#task-date-input {
+#taskDateInput {
     padding: 3px;
 }
 
-#priority-radios {
+#priorityRadios {
     display: flex;
     gap: 12px;
 }
@@ -187,44 +187,44 @@ textarea {
     cursor: pointer;
 }
 
-#priority-form {
+#priorityForm {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-#project-date-priority {
+#projectDatePriority {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.8rem;
 }
 
-#add-task-btns {
+#addTaskBtns {
     display: flex;
     justify-content: end;
     gap: 12px;
 }
 
-#confirm-add-task {
+#confirmAddTask {
     background-color: var(--button-gray);
 }
 
-#confirm-add-task:hover {
+#confirmAddTask:hover {
     background-color: darkgray;
 }
 
-#confirm-add-task,
-#cancel-add-task {
+#confirmAddTask,
+#cancelAddTask {
     padding: 8px;
     border-radius: 5px;
 }
 
-#cancel-add-task {
+#cancelAddTask {
     background-color: var(--button-red);
 }
 
-#cancel-add-task:hover {
+#cancelAddTask:hover {
     background-color: var(--button-red-hover);
 }
 
@@ -232,7 +232,7 @@ textarea {
 
 /* --- TASK DETAILS --- */
 
-#task-details {
+#taskDetails {
     display: none;
     justify-content: space-between;
     position: absolute;
@@ -243,7 +243,7 @@ textarea {
     background-color: white;
 }
 
-#details-title-description {
+#detailsTitleDescription {
     display: flex;
     flex-direction: column;
     max-width: 450px;
@@ -251,12 +251,12 @@ textarea {
     padding: 12px;
 }
 
-#details-title {
+#detailsTitle {
     font-size: 1.1rem;
     font-weight: 500;
 }
 
-#details-sidebar {
+#detailsSidebar {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -267,32 +267,32 @@ textarea {
     font-size: 0.8rem;
 }
 
-#details-sidebar-header {
+#detailsSidebarHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.details-sidebar-icons {
+.detailsSidebarIcons {
     height: 20px;
     width: 20px;
 }
 
-#details-delete-btn,
-#details-edit-btn,
-#details-close-btn {
+#detailsDeleteBtn,
+#detailsEditBtn,
+#detailsCloseBtn {
     padding: 4px;
     cursor: pointer;
 }
 
-#details-delete-btn:hover,
-#details-edit-btn:hover,
-#details-close-btn:hover {
+#detailsDeleteBtn:hover,
+#detailsEditBtn:hover,
+#detailsCloseBtn:hover {
     background-color: lightgray;
     border-radius: 5px;
 }
 
-.details-sidebar-list li {
+.detailsSidebarList li {
     display: flex;
     align-items: center;
     padding-left: 12px;
@@ -301,7 +301,7 @@ textarea {
     border-bottom: 1px solid rgb(200, 200, 200);
 }
 
-.details-icons {
+.detailsIcons {
     height: 15px;
     width: 15px;
 }
@@ -334,15 +334,15 @@ textarea {
     font-weight: 650;
 }
 
-#add-task-content-btn,
-.project-add-task-btn {
+#addTaskContentBtn,
+.projectAddTaskBtn {
     font-size: 0.9rem;
     background-color: var(--main-bg);
     cursor: pointer;
 }
 
-#add-task-content-btn:hover,
-.project-add-task-btn:hover {
+#addTaskContentBtn:hover,
+.projectAddTaskBtn:hover {
     color: var(--button-red-hover);
 }
 
@@ -362,7 +362,7 @@ textarea {
     background-color: var(--main-bg);
 }
 
-.card {
+.task {
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -384,14 +384,14 @@ textarea {
     font-weight: 500;
 }
 
-.task-list {
+.taskList {
     display: flex;
     flex-direction: column;
     list-style: none;
     gap: 16px;
 }
 
-.task-text {
+.taskText {
     font-size: 0.8rem;
 }
 

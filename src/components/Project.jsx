@@ -1,6 +1,8 @@
 import Button from './Button';
 import Icon from './Icon';
 import { useState } from 'react';
+import { tasks } from '../data';
+import Task from './Task';
 
 const icons = {
     expand: '/icons/menu-down.svg',
@@ -23,6 +25,20 @@ function ProjectHeader({ id, projectName, iconSrc, onClick }) {
     );
 }
 
+export function TaskList({ tasks, id }) {
+    return (
+        <ul className="taskList" id={id}>
+            {tasks.map((task) => {
+                return (
+                    <li key={task.id}>
+                        <Task task={task} />
+                    </li>
+                );
+            })}
+        </ul>
+    );
+}
+
 export default function Project({ id, projectName }) {
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -38,6 +54,7 @@ export default function Project({ id, projectName }) {
                 iconSrc={isExpanded ? icons.expand : icons.collapse}
                 onClick={handleExpand}
             />
+            <TaskList tasks={tasks} id={'allList'} />
         </div>
     );
 }

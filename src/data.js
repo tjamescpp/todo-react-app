@@ -60,3 +60,14 @@ export const projectButtons = [
         src: projectIcon,
     },
 ];
+
+export const tasks = [
+    {
+        id: crypto.randomUUID(),
+        title: 'Getting started',
+        text: 'Welcome to your todo list! Delete this and start adding your tasks...',
+        project: 'General',
+        dueDate: '2025-08-08',
+        priority: 'p2',
+    },
+];
