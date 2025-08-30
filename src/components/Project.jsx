@@ -1,7 +1,6 @@
 import Button from './Button';
 import Icon from './Icon';
 import { useState } from 'react';
-import { tasks } from '../data';
 import Task from './Task';
 
 const icons = {
@@ -39,8 +38,8 @@ export function TaskList({ tasks, id }) {
     );
 }
 
-export default function Project({ id, projectName }) {
-    const [isExpanded, setIsExpanded] = useState(false);
+export default function Project({ id, project }) {
+    const [isExpanded, setIsExpanded] = useState(true);
 
     const handleExpand = () => {
         setIsExpanded(!isExpanded);
@@ -49,7 +48,7 @@ export default function Project({ id, projectName }) {
     // convert to useEffect when the app is connected to a server
     const showTaskList = () => {
         if (isExpanded) {
-            return <TaskList tasks={tasks} id={'allList'} />;
+            return <TaskList tasks={project.tasks} id={'allList'} />;
         }
     };
 
@@ -57,7 +56,7 @@ export default function Project({ id, projectName }) {
         <div className="project" id={id}>
             <ProjectHeader
                 id={'allHeader'}
-                projectName={projectName}
+                projectName={project.title}
                 iconSrc={isExpanded ? icons.expand : icons.collapse}
                 onClick={handleExpand}
             />

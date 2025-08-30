@@ -70,4 +70,39 @@ export const tasks = [
         dueDate: '2025-08-08',
         priority: 'p2',
     },
+    {
+        id: crypto.randomUUID(),
+        title: 'Go to the gym',
+        text: 'Testing projects...',
+        project: 'Fitness',
+        dueDate: '2025-08-14',
+        priority: 'p3',
+    },
+    {
+        id: crypto.randomUUID(),
+        title: 'Work on coding project',
+        text: 'Testing projects...',
+        project: 'School',
+        dueDate: '2025-08-18',
+        priority: 'p2',
+    },
+];
+
+export const projects = [
+    {
+        title: 'All',
+        tasks: [],
+    },
+    {
+        title: 'General',
+        tasks: [],
+    },
+    {
+        title: 'Fitness',
+        tasks: [],
+    },
+    {
+        title: 'School',
+        tasks: [],
+    },
 ];
