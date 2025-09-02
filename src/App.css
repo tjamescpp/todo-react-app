@@ -233,7 +233,7 @@ textarea {
 /* --- TASK DETAILS --- */
 
 #taskDetails {
-    display: none;
+    display: flex;
     justify-content: space-between;
     position: absolute;
     border-radius: 15px;
@@ -278,21 +278,17 @@ textarea {
     width: 20px;
 }
 
-#detailsDeleteBtn,
-#detailsEditBtn,
-#detailsCloseBtn {
+.detailsBtn {
     padding: 4px;
     cursor: pointer;
 }
 
-#detailsDeleteBtn:hover,
-#detailsEditBtn:hover,
-#detailsCloseBtn:hover {
+.detailsBtn:hover {
     background-color: lightgray;
     border-radius: 5px;
 }
 
-.detailsSidebarList li {
+.detailsSidebarBody > div {
     display: flex;
     align-items: center;
     padding-left: 12px;

@@ -1,7 +1,7 @@
 import Button from './Button';
 import Icon from './Icon';
 import { useState } from 'react';
-import Task from './Task';
+import { TaskList } from './Task';
 
 const icons = {
     expand: '/icons/menu-down.svg',
@@ -24,20 +24,6 @@ function ProjectHeader({ id, projectName, iconSrc, onClick }) {
     );
 }
 
-export function TaskList({ tasks, id }) {
-    return (
-        <ul className="taskList" id={id}>
-            {tasks.map((task) => {
-                return (
-                    <li key={task.id}>
-                        <Task task={task} />
-                    </li>
-                );
-            })}
-        </ul>
-    );
-}
-
 export default function Project({ id, project }) {
     const [isExpanded, setIsExpanded] = useState(true);
 
@@ -48,7 +34,7 @@ export default function Project({ id, project }) {
     // convert to useEffect when the app is connected to a server
     const showTaskList = () => {
         if (isExpanded) {
-            return <TaskList tasks={project.tasks} id={'allList'} />;
+            return <TaskList tasks={project} id={'allList'} />;
         }
     };
 

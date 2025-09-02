@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 import Button from './components/Button';
 import Content from './components/Content';
@@ -7,33 +8,21 @@ import Sidebar from './components/Sidebar';
 import SidebarHeader from './components/SidebarHeader';
 import SidebarList from './components/SidebarList';
 import ToDoList from './components/ToDoList.jsx';
-import {
-    users,
-    sidebarButtons,
-    projectButtons,
-    tasks,
-    projects,
-} from './data.js';
-
-// add all tasks to the All project
-const allProject = projects.find((project) => project.title === 'All');
-allProject.tasks = tasks;
-
-// add tasks the the General project
-const generalProject = projects.find((project) => project.title === 'General');
-generalProject.tasks = tasks.filter((task) => task.project === 'General');
-
-// add tasks the the Fitness project
-const fitnessProject = projects.find((project) => project.title === 'Fitness');
-fitnessProject.tasks = tasks.filter((task) => task.project === 'Fitness');
-
-// add tasks the the School project
-const schoolProject = projects.find((project) => project.title === 'School');
-schoolProject.tasks = tasks.filter((task) => task.project === 'School');
-
-console.log('All project:', allProject);
+import { users, sidebarButtons, projectButtons, tasks } from './data.js';
 
 function App() {
+    const [allTasks, setAllTasks] = useState(tasks);
+
+    console.log(allTasks);
+
+    const generalProject = allTasks.filter(
+        (task) => task.project === 'General'
+    );
+    const fitnessProject = allTasks.filter(
+        (task) => task.project === 'Fitness'
+    );
+    const schoolProject = allTasks.filter((task) => task.project === 'School');
+
     return (
         <div id="container">
             <Sidebar>
@@ -61,7 +50,7 @@ function App() {
             </Sidebar>
             <Content>
                 <ToDoList>
-                    <Project id="allProject" project={allProject} />
+                    <Project id="allProject" project={allTasks} />
                     <Project id="generalProject" project={generalProject} />
                     <Project id="fitnessProject" project={fitnessProject} />
                     <Project id="schoolProject" project={schoolProject} />
