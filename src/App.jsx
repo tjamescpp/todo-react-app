@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TasksContext } from './components/tasksContext.js';
 import './App.css';
 import Button from './components/Button';
 import Content from './components/Content';
@@ -14,14 +15,6 @@ function App() {
     const [allTasks, setAllTasks] = useState(tasks);
 
     console.log(allTasks);
-
-    const generalProject = allTasks.filter(
-        (task) => task.project === 'General'
-    );
-    const fitnessProject = allTasks.filter(
-        (task) => task.project === 'Fitness'
-    );
-    const schoolProject = allTasks.filter((task) => task.project === 'School');
 
     return (
         <div id="container">
@@ -50,10 +43,22 @@ function App() {
             </Sidebar>
             <Content>
                 <ToDoList>
-                    <Project id="allProject" project={allTasks} />
-                    <Project id="generalProject" project={generalProject} />
-                    <Project id="fitnessProject" project={fitnessProject} />
-                    <Project id="schoolProject" project={schoolProject} />
+                    <Project id="allProject" name="All" tasks={allTasks} />
+                    <Project
+                        id="generalProject"
+                        name="General"
+                        tasks={allTasks}
+                    />
+                    <Project
+                        id="fitnessProject"
+                        name="Fitness"
+                        tasks={allTasks}
+                    />
+                    <Project
+                        id="schoolProject"
+                        name="School"
+                        tasks={allTasks}
+                    />
                 </ToDoList>
             </Content>
         </div>

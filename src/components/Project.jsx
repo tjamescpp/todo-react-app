@@ -8,9 +8,9 @@ const icons = {
     collapse: '/icons/menu-right.svg',
 };
 
-function ProjectHeader({ id, projectName, iconSrc, onClick }) {
+function ProjectHeader({ projectName, iconSrc, onClick }) {
     return (
-        <div className="projectHeader" id={id}>
+        <div className="projectHeader">
             <Button className="listExpandCollapse" onClick={onClick}>
                 <Icon
                     className="contentIcons"
@@ -24,7 +24,7 @@ function ProjectHeader({ id, projectName, iconSrc, onClick }) {
     );
 }
 
-export default function Project({ id, project }) {
+export default function Project({ id, name, tasks }) {
     const [isExpanded, setIsExpanded] = useState(true);
 
     const handleExpand = () => {
@@ -34,15 +34,22 @@ export default function Project({ id, project }) {
     // convert to useEffect when the app is connected to a server
     const showTaskList = () => {
         if (isExpanded) {
-            return <TaskList tasks={project} id={'allList'} />;
+            return (
+                <TaskList
+                    tasks={
+                        name === 'All'
+                            ? tasks
+                            : tasks.filter((task) => task.project === name)
+                    }
+                />
+            );
         }
     };
 
     return (
         <div className="project" id={id}>
             <ProjectHeader
-                id={'allHeader'}
-                projectName={project.title}
+                projectName={name}
                 iconSrc={isExpanded ? icons.expand : icons.collapse}
                 onClick={handleExpand}
             />

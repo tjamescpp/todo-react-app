@@ -85,9 +85,9 @@ export default function Task({ task }) {
     );
 }
 
-export function TaskList({ tasks, id }) {
+export function TaskList({ tasks }) {
     return (
-        <ul className="taskList" id={id}>
+        <ul className="taskList">
             {tasks.map((task) => {
                 return (
                     <li key={task.id}>
