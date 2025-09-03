@@ -2,7 +2,49 @@ import { useState } from 'react';
 import Button from './Button';
 import Icon from './Icon';
 
-function TaskDetails({ task, handleClose }) {
+export function TaskList({ tasks, handleTaskDeleted }) {
+    return (
+        <ul className="taskList">
+            {tasks.map((task) => {
+                return (
+                    <li key={task.id}>
+                        <Task
+                            task={task}
+                            handleTaskDeleted={handleTaskDeleted}
+                        />
+                    </li>
+                );
+            })}
+        </ul>
+    );
+}
+
+export default function Task({ task, handleTaskDeleted }) {
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleClick = () => {
+        console.log('Task clicked!');
+        setIsClicked(!isClicked);
+    };
+
+    return (
+        <>
+            <div className="task" id={task.id} onClick={handleClick}>
+                <p className="taskTitle">{task.title}</p>
+                <p className="taskText">{task.text}</p>
+            </div>
+            {isClicked && (
+                <TaskDetails
+                    task={task}
+                    handleClose={handleClick}
+                    handleTaskDeleted={handleTaskDeleted}
+                />
+            )}
+        </>
+    );
+}
+
+function TaskDetails({ task, handleClose, handleTaskDeleted }) {
     return (
         <div id="taskDetails">
             <div id="detailsTitleDescription">
@@ -11,7 +53,11 @@ function TaskDetails({ task, handleClose }) {
             </div>
             <div id="detailsSidebar">
                 <div id="detailsSidebarHeader">
-                    <Button type="Button" className="detailsBtn">
+                    <Button
+                        type="Button"
+                        className="detailsBtn"
+                        onClick={() => handleTaskDeleted(task.id)} // needs wrapper function because it has arguments
+                    >
                         <Icon
                             className="detailsSidebarIcons"
                             src="/icons/trash-can-outline.svg"
@@ -63,38 +109,5 @@ function SidebarDetail({ name, taskDetail, iconSrc }) {
                 <p>{taskDetail}</p>
             </div>
         </div>
-    );
-}
-
-export default function Task({ task }) {
-    const [isClicked, setIsClicked] = useState(false);
-
-    const handleClick = () => {
-        console.log('Task clicked!');
-        setIsClicked(!isClicked);
-    };
-
-    return (
-        <>
-            <div className="task" id={task.id} onClick={handleClick}>
-                <p className="taskTitle">{task.title}</p>
-                <p className="taskText">{task.text}</p>
-            </div>
-            {isClicked && <TaskDetails task={task} handleClose={handleClick} />}
-        </>
-    );
-}
-
-export function TaskList({ tasks }) {
-    return (
-        <ul className="taskList">
-            {tasks.map((task) => {
-                return (
-                    <li key={task.id}>
-                        <Task task={task} />
-                    </li>
-                );
-            })}
-        </ul>
     );
 }

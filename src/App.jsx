@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { TasksContext } from './components/tasksContext.js';
 import './App.css';
 import Button from './components/Button';
@@ -10,11 +10,18 @@ import SidebarHeader from './components/SidebarHeader';
 import SidebarList from './components/SidebarList';
 import ToDoList from './components/ToDoList.jsx';
 import { users, sidebarButtons, projectButtons, tasks } from './data.js';
+import { useState } from 'react';
 
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);
-
     console.log(allTasks);
+
+    const handleTaskDeleted = (taskId) => {
+        console.log('Deleting task...');
+        setAllTasks((allTasks) =>
+            allTasks.filter((task) => task.id !== taskId)
+        );
+    };
 
     return (
         <div id="container">
@@ -43,21 +50,29 @@ function App() {
             </Sidebar>
             <Content>
                 <ToDoList>
-                    <Project id="allProject" name="All" tasks={allTasks} />
+                    <Project
+                        id="allProject"
+                        name="All"
+                        tasks={allTasks}
+                        handleTaskDeleted={handleTaskDeleted}
+                    />
                     <Project
                         id="generalProject"
                         name="General"
                         tasks={allTasks}
+                        handleTaskDeleted={handleTaskDeleted}
                     />
                     <Project
                         id="fitnessProject"
                         name="Fitness"
                         tasks={allTasks}
+                        handleTaskDeleted={handleTaskDeleted}
                     />
                     <Project
                         id="schoolProject"
                         name="School"
                         tasks={allTasks}
+                        handleTaskDeleted={handleTaskDeleted}
                     />
                 </ToDoList>
             </Content>
