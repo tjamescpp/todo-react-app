@@ -9,11 +9,14 @@ import Sidebar from './components/Sidebar';
 import SidebarHeader from './components/SidebarHeader';
 import SidebarList from './components/SidebarList';
 import ToDoList from './components/ToDoList.jsx';
-import { users, sidebarButtons, projectButtons, tasks } from './data.js';
+import TaskForm from './components/TaskForm.jsx';
+import { users, tasks } from './data.js';
 import { useState } from 'react';
 
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);
+    const [addTask, setAddTask] = useState(false);
+
     console.log(allTasks);
 
     const handleTaskDeleted = (taskId) => {
@@ -22,6 +25,14 @@ function App() {
             allTasks.filter((task) => task.id !== taskId)
         );
     };
+
+    const handleAddTask = () => {
+        console.log('Adding a task...');
+        setAddTask(true);
+    };
+
+    sidebarButtons.find((button) => button.name === 'Add task').onClick =
+        handleAddTask;
 
     return (
         <div id="container">
@@ -50,6 +61,7 @@ function App() {
             </Sidebar>
             <Content>
                 <ToDoList>
+                    {addTask && <TaskForm />}
                     <Project
                         id="allProject"
                         name="All"
@@ -79,5 +91,58 @@ function App() {
         </div>
     );
 }
+
+const sidebarButtons = [
+    {
+        name: 'Search',
+        id: 'searchBtn',
+        src: '/icons/magnify.svg',
+        onClick: null,
+    },
+    {
+        name: 'Add task',
+        id: 'addTaskBtn',
+        src: '/icons/plus-box-outline.svg',
+        onClick: null,
+    },
+    {
+        name: 'Dashboard',
+        id: 'dashboardBtn',
+        src: '/icons/home-outline.svg',
+        onClick: null,
+    },
+    {
+        name: 'Inbox',
+        id: 'inboxBtn',
+        src: '/icons/inbox.svg',
+        onClick: null,
+    },
+    {
+        name: 'Today',
+        id: 'todayBtn',
+        src: '/icons/calendar-check.svg',
+        onClick: null,
+    },
+];
+
+const projectIcon = '/icons/pound.svg';
+
+const projectButtons = [
+    {
+        name: 'General',
+        id: 'generalProjectBtn',
+        src: projectIcon,
+    },
+    {
+        name: 'Fitness',
+        id: 'fitnessProjectBtn',
+        src: projectIcon,
+    },
+    {
+        name: 'School',
+        id: 'schoolProjectBtn',
+        src: projectIcon,
+    },
+];
 
 export default App;

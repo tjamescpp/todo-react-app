@@ -17,6 +17,7 @@ export default function SidebarList({
                             className={buttonClass}
                             type={buttonType}
                             id={button.id}
+                            onClick={button.onClick}
                         >
                             <Icon
                                 className={iconClass}

@@ -25,18 +25,11 @@ function ProjectHeader({ projectName, iconSrc, onClick }) {
 }
 
 export default function Project({ id, name, tasks, handleTaskDeleted }) {
-    // const [projectTasks, setProjectTasks] = useState(tasks);
     const [isExpanded, setIsExpanded] = useState(true);
-    // const [taskDeleted, setTaskDeleted] = useState(false);
 
     const handleExpand = () => {
         setIsExpanded(!isExpanded);
     };
-
-    // const handleDeleted = (taskId) => {
-    //     setProjectTasks(projectTasks.filter((task) => task.id !== taskId));
-    //     setTaskDeleted(!taskDeleted);
-    // };
 
     // convert to useEffect when the app is connected to a server
     const showTaskList = () => {

@@ -13,54 +13,6 @@ export const users = [
     },
 ];
 
-export const sidebarButtons = [
-    {
-        name: 'Search',
-        id: 'searchBtn',
-        src: '/icons/magnify.svg',
-    },
-    {
-        name: 'Add task',
-        id: 'addTaskBtn',
-        src: '/icons/plus-box-outline.svg',
-    },
-    {
-        name: 'Dashboard',
-        id: 'dashboardBtn',
-        src: '/icons/home-outline.svg',
-    },
-    {
-        name: 'Inbox',
-        id: 'inboxBtn',
-        src: '/icons/inbox.svg',
-    },
-    {
-        name: 'Today',
-        id: 'todayBtn',
-        src: '/icons/calendar-check.svg',
-    },
-];
-
-const projectIcon = '/icons/pound.svg';
-
-export const projectButtons = [
-    {
-        name: 'General',
-        id: 'generalProjectBtn',
-        src: projectIcon,
-    },
-    {
-        name: 'Fitness',
-        id: 'fitnessProjectBtn',
-        src: projectIcon,
-    },
-    {
-        name: 'School',
-        id: 'schoolProjectBtn',
-        src: projectIcon,
-    },
-];
-
 export const tasks = [
     {
         id: crypto.randomUUID(),
@@ -88,21 +40,4 @@ export const tasks = [
     },
 ];
 
-export const projects = [
-    {
-        title: 'All',
-        tasks: [],
-    },
-    {
-        title: 'General',
-        tasks: [],
-    },
-    {
-        title: 'Fitness',
-        tasks: [],
-    },
-    {
-        title: 'School',
-        tasks: [],
-    },
-];
+export const projects = ['All', 'General', 'Fitness', 'School'];
