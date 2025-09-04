@@ -1,5 +1,4 @@
-// import { useState } from 'react';
-import { TasksContext } from './components/tasksContext.js';
+import { useState } from 'react';
 import './App.css';
 import Button from './components/Button';
 import Content from './components/Content';
@@ -11,7 +10,6 @@ import SidebarList from './components/SidebarList';
 import ToDoList from './components/ToDoList.jsx';
 import TaskForm from './components/TaskForm.jsx';
 import { users, tasks } from './data.js';
-import { useState } from 'react';
 
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);

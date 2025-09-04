@@ -75,6 +75,20 @@
 
 /* --- ADD TASK --- */
 
+/* Background overlay */
+.overlay {
+    position: fixed; /* covers the whole viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* semi-transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* sits above the rest of the app */
+}
+
 #addTaskForm {
     display: block;
     position: absolute;
@@ -240,7 +254,7 @@ textarea {
     justify-content: space-between;
     position: absolute;
     border-radius: 15px;
-    width: clamp(625px, 50%, 700px);
+    width: clamp(625px, 50%, 750px);
     box-shadow: var(--card-shadow);
     top: 6rem;
     background-color: white;

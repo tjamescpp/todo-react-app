@@ -46,55 +46,57 @@ export default function Task({ task, handleTaskDeleted }) {
 
 function TaskDetails({ task, handleClose, handleTaskDeleted }) {
     return (
-        <div id="taskDetails">
-            <div id="detailsTitleDescription">
-                <p id="detailsTitle">{task.title}</p>
-                <p id="detailsDescription">{task.text}</p>
-            </div>
-            <div id="detailsSidebar">
-                <div id="detailsSidebarHeader">
-                    <Button
-                        type="Button"
-                        className="detailsBtn"
-                        onClick={() => handleTaskDeleted(task.id)} // needs wrapper function because it has arguments
-                    >
-                        <Icon
-                            className="detailsSidebarIcons"
-                            src="/icons/trash-can-outline.svg"
-                        />
-                    </Button>
-                    <Button type="Button" className="detailsBtn">
-                        <Icon
-                            className="detailsSidebarIcons"
-                            src="/icons/square-edit-outline.svg"
-                        />
-                    </Button>
-                    <Button
-                        type="Button"
-                        className="detailsBtn"
-                        onClick={handleClose}
-                    >
-                        <Icon
-                            className="detailsSidebarIcons"
-                            src="/icons/close.svg"
-                        />
-                    </Button>
+        <div className="overlay">
+            <div id="taskDetails">
+                <div id="detailsTitleDescription">
+                    <p id="detailsTitle">{task.title}</p>
+                    <p id="detailsDescription">{task.text}</p>
                 </div>
-                <SidebarDetail
-                    name="Project"
-                    taskDetail={task.project}
-                    iconSrc="/icons/pound.svg"
-                />
-                <SidebarDetail
-                    name="Due"
-                    taskDetail={task.dueDate}
-                    iconSrc="/icons/calendar-blank.svg"
-                />
-                <SidebarDetail
-                    name="Priority"
-                    taskDetail={task.priority}
-                    iconSrc="/icons/star-outline.svg"
-                />
+                <div id="detailsSidebar">
+                    <div id="detailsSidebarHeader">
+                        <Button
+                            type="Button"
+                            className="detailsBtn"
+                            onClick={() => handleTaskDeleted(task.id)} // needs wrapper function because it has arguments
+                        >
+                            <Icon
+                                className="detailsSidebarIcons"
+                                src="/icons/trash-can-outline.svg"
+                            />
+                        </Button>
+                        <Button type="Button" className="detailsBtn">
+                            <Icon
+                                className="detailsSidebarIcons"
+                                src="/icons/square-edit-outline.svg"
+                            />
+                        </Button>
+                        <Button
+                            type="Button"
+                            className="detailsBtn"
+                            onClick={handleClose}
+                        >
+                            <Icon
+                                className="detailsSidebarIcons"
+                                src="/icons/close.svg"
+                            />
+                        </Button>
+                    </div>
+                    <SidebarDetail
+                        name="Project"
+                        taskDetail={task.project}
+                        iconSrc="/icons/pound.svg"
+                    />
+                    <SidebarDetail
+                        name="Due"
+                        taskDetail={task.dueDate}
+                        iconSrc="/icons/calendar-blank.svg"
+                    />
+                    <SidebarDetail
+                        name="Priority"
+                        taskDetail={task.priority}
+                        iconSrc="/icons/star-outline.svg"
+                    />
+                </div>
             </div>
         </div>
     );
