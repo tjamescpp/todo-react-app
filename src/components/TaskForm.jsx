@@ -3,16 +3,22 @@ import Button from './Button';
 import Icon from './Icon';
 import { projects } from '../data';
 
-export default function TaskForm() {
+export default function TaskForm({ handleCancel, handleConfirm }) {
     const [isDropdown, setIsDropdown] = useState(false);
+    const [projectValue, setProjectValue] = useState('Project');
 
     const handleProjectDropdown = () => {
         console.log('Project dropdown clicked...');
-        setIsDropdown(!isDropdown);
+        setIsDropdown(true);
+    };
+
+    const handleProjectValue = (value) => {
+        setProjectValue(value);
+        setIsDropdown(false);
     };
 
     return (
-        <div id="addTaskForm">
+        <form id="addTaskForm" onSubmit={(e) => handleConfirm(e)}>
             <fieldset>
                 <input
                     type="text"
@@ -27,9 +33,13 @@ export default function TaskForm() {
                 />
                 <div id="projectDatePriority">
                     <div>
-                        <Button id="projectBtn" onClick={handleProjectDropdown}>
+                        <Button
+                            id="projectBtn"
+                            type="button"
+                            onClick={handleProjectDropdown}
+                        >
                             <div id="projectDropdown">
-                                <p id="projectValue">Project</p>
+                                <p id="projectValue">{projectValue}</p>
                                 <Icon
                                     id="projectMenuIcon"
                                     src="/icons/menu-down.svg"
@@ -37,7 +47,12 @@ export default function TaskForm() {
                                 />
                             </div>
                         </Button>
-                        {isDropdown && <ProjectList projects={projects} />}
+                        {isDropdown && (
+                            <ProjectList
+                                projects={projects}
+                                handleProjectValue={handleProjectValue}
+                            />
+                        )}
                     </div>
                     <div>
                         <label htmlFor="taskDateInput">Due date</label>
@@ -49,7 +64,7 @@ export default function TaskForm() {
                     </div>
                     <div id="priorityRadios">
                         <p>Priority</p>
-                        <form id="priorityForm">
+                        <div id="priorityForm">
                             <input
                                 type="radio"
                                 id="p1"
@@ -74,19 +89,23 @@ export default function TaskForm() {
                                 className="radios"
                             />
                             <label htmlFor="p3">P3</label>
-                        </form>
+                        </div>
                     </div>
                 </div>
                 <div id="addTaskBtns">
-                    <Button id="confirmAddTask">Confirm</Button>
-                    <Button id="cancelAddTask">Cancel</Button>
+                    <Button id="confirmAddTask" type="submit">
+                        Confirm
+                    </Button>
+                    <Button id="cancelAddTask" onClick={handleCancel}>
+                        Cancel
+                    </Button>
                 </div>
             </fieldset>
-        </div>
+        </form>
     );
 }
 
-function ProjectList({ projects }) {
+function ProjectList({ projects, handleProjectValue }) {
     return (
         <ul id="projectList">
             {projects.map((project) => {
@@ -97,6 +116,7 @@ function ProjectList({ projects }) {
                             className="projectListBtn"
                             type="button"
                             value={project}
+                            onClick={() => handleProjectValue(project)}
                         />
                     </li>
                 );

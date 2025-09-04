@@ -31,6 +31,31 @@ function App() {
         setAddTask(true);
     };
 
+    const handleCancel = () => {
+        console.log('Cancel clicked...');
+        setAddTask(false);
+    };
+
+    const handleConfirm = (e) => {
+        e.preventDefault();
+        console.log('Confirm clicked...');
+
+        const newTask = {
+            id: crypto.randomUUID(),
+            title: e.target.taskTitleInput.value,
+            text: e.target.taskDescriptionText.value,
+            project: document.getElementById('projectValue').textContent,
+            dueDate: e.target.taskDateInput.value,
+            priority: document
+                .querySelector('input[name="priority"]:checked')
+                ?.value.toLowerCase(),
+        };
+
+        console.log('Created new task...', newTask);
+        setAllTasks([...allTasks, newTask]);
+        setAddTask(false);
+    };
+
     sidebarButtons.find((button) => button.name === 'Add task').onClick =
         handleAddTask;
 
@@ -61,7 +86,12 @@ function App() {
             </Sidebar>
             <Content>
                 <ToDoList>
-                    {addTask && <TaskForm />}
+                    {addTask && (
+                        <TaskForm
+                            handleCancel={handleCancel}
+                            handleConfirm={handleConfirm}
+                        />
+                    )}
                     <Project
                         id="allProject"
                         name="All"
