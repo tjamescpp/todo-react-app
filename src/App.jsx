@@ -85,13 +85,13 @@ function App() {
                 </div>
             </Sidebar>
             <Content>
+                {addTask && (
+                    <TaskForm
+                        handleCancel={handleCancel}
+                        handleConfirm={handleConfirm}
+                    />
+                )}
                 <ToDoList>
-                    {addTask && (
-                        <TaskForm
-                            handleCancel={handleCancel}
-                            handleConfirm={handleConfirm}
-                        />
-                    )}
                     <Project
                         id="allProject"
                         name="All"
