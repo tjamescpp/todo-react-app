@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import Button from './Button';
 import Icon from './Icon';
+import TaskForm from './TaskForm';
 
-export function TaskList({ tasks, handleTaskDeleted }) {
+export function TaskList({ tasks, handleTaskDeleted, handleEdit }) {
     return (
         <ul className="taskList">
             {tasks.map((task) => {
@@ -11,6 +12,7 @@ export function TaskList({ tasks, handleTaskDeleted }) {
                         <Task
                             task={task}
                             handleTaskDeleted={handleTaskDeleted}
+                            handleEdit={handleEdit}
                         />
                     </li>
                 );
@@ -19,7 +21,7 @@ export function TaskList({ tasks, handleTaskDeleted }) {
     );
 }
 
-export default function Task({ task, handleTaskDeleted }) {
+export default function Task({ task, handleTaskDeleted, handleEdit }) {
     const [isClicked, setIsClicked] = useState(false);
 
     const handleClick = () => {
@@ -38,13 +40,16 @@ export default function Task({ task, handleTaskDeleted }) {
                     task={task}
                     handleClose={handleClick}
                     handleTaskDeleted={handleTaskDeleted}
+                    handleEdit={handleEdit}
                 />
             )}
         </>
     );
 }
 
-function TaskDetails({ task, handleClose, handleTaskDeleted }) {
+function TaskDetails({ task, handleClose, handleTaskDeleted, handleEdit }) {
+    // const [isEdit, setIsEdit] = useState(null);
+
     return (
         <div className="overlay">
             <div id="taskDetails">
@@ -64,7 +69,11 @@ function TaskDetails({ task, handleClose, handleTaskDeleted }) {
                                 src="/icons/trash-can-outline.svg"
                             />
                         </Button>
-                        <Button type="Button" className="detailsBtn">
+                        <Button
+                            type="Button"
+                            className="detailsBtn"
+                            onClick={() => handleEdit(task.id, handleClose)}
+                        >
                             <Icon
                                 className="detailsSidebarIcons"
                                 src="/icons/square-edit-outline.svg"

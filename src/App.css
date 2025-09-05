@@ -93,7 +93,7 @@
     display: block;
     position: absolute;
     top: 3rem;
-    width: clamp(650px, 50%, 775px);
+    width: clamp(650px, 50%, 750px);
 }
 
 fieldset {

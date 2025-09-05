@@ -2,10 +2,41 @@ import { useState } from 'react';
 import Button from './Button';
 import Icon from './Icon';
 import { projects } from '../data';
+import { useEffect } from 'react';
 
-export default function TaskForm({ handleCancel, handleConfirm }) {
+export default function TaskForm({ handleCancel, handleConfirm, task }) {
     const [isDropdown, setIsDropdown] = useState(false);
     const [projectValue, setProjectValue] = useState('Project');
+    const [title, setTitle] = useState('');
+    const [text, setText] = useState('');
+    const [dueDate, setDueDate] = useState('');
+    const [priority, setPriority] = useState('');
+    const [project, setProject] = useState('');
+
+    // when editing, load values from task into state
+    useEffect(() => {
+        if (task) {
+            setTitle(task.title || '');
+            setText(task.text || '');
+            setDueDate(task.dueDate || '');
+            setPriority(task.priority || 'p2');
+            setProject(task.project || 'General');
+        }
+    }, [task]);
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        handleConfirm({
+            ...task, // keep existing id if editing
+            title,
+            text,
+            dueDate,
+            priority,
+            project,
+        });
+    };
+
+    console.log('Editing task:', task);
 
     const handleProjectDropdown = () => {
         console.log('Project dropdown clicked...');
@@ -14,24 +45,27 @@ export default function TaskForm({ handleCancel, handleConfirm }) {
 
     const handleProjectValue = (value) => {
         setProjectValue(value);
+        setProject(value);
         setIsDropdown(false);
     };
 
     return (
         <div className="overlay">
             <div id="addTaskForm">
-                <form onSubmit={(e) => handleConfirm(e)}>
+                <form onSubmit={onSubmit}>
                     <fieldset>
                         <input
-                            type="text"
-                            name="taskTitleInput"
                             id="taskTitleInput"
+                            type="text"
                             placeholder="Take the dog for a walk"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
                         />
                         <textarea
-                            name="taskDescriptionText"
                             id="taskDescriptionText"
                             placeholder="Description"
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
                         />
                         <div id="projectDatePriority">
                             <div>
@@ -62,6 +96,8 @@ export default function TaskForm({ handleCancel, handleConfirm }) {
                                     type="date"
                                     name="taskDateInput"
                                     id="taskDateInput"
+                                    value={dueDate}
+                                    onChange={(e) => setDueDate(e.target.value)}
                                 />
                             </div>
                             <div id="priorityRadios">
@@ -73,6 +109,10 @@ export default function TaskForm({ handleCancel, handleConfirm }) {
                                         name="priority"
                                         value="p1"
                                         className="radios"
+                                        checked={priority === 'p1'}
+                                        onChange={(e) =>
+                                            setPriority(e.target.value)
+                                        }
                                     />
                                     <label htmlFor="p1">P1</label>
                                     <input
@@ -81,6 +121,10 @@ export default function TaskForm({ handleCancel, handleConfirm }) {
                                         name="priority"
                                         value="p2"
                                         className="radios"
+                                        checked={priority === 'p2'}
+                                        onChange={(e) =>
+                                            setPriority(e.target.value)
+                                        }
                                     />
                                     <label htmlFor="p2">P2</label>
                                     <input
@@ -89,6 +133,10 @@ export default function TaskForm({ handleCancel, handleConfirm }) {
                                         name="priority"
                                         value="p3"
                                         className="radios"
+                                        checked={priority === 'p3'}
+                                        onChange={(e) =>
+                                            setPriority(e.target.value)
+                                        }
                                     />
                                     <label htmlFor="p3">P3</label>
                                 </div>

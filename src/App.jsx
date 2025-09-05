@@ -14,6 +14,9 @@ import { users, tasks } from './data.js';
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);
     const [addTask, setAddTask] = useState(false);
+    const [isEditTask, setIsEditTask] = useState(false);
+    const [editTask, setEditTask] = useState(null);
+    // const [newTask, setNewTask] = useState(null);
 
     console.log(allTasks);
 
@@ -29,31 +32,41 @@ function App() {
         setAddTask(true);
     };
 
-    const handleCancel = () => {
+    const handleCancel = (e) => {
+        e.preventDefault();
         console.log('Cancel clicked...');
         setAddTask(false);
+        setIsEditTask(false);
     };
 
-    const handleConfirm = (e) => {
-        e.preventDefault();
-        console.log('Confirm clicked...');
+    const handleConfirm = (task) => {
+        if (task.id) {
+            // Editing existing task
+            setAllTasks(allTasks.map((t) => (t.id === task.id ? task : t)));
+            console.log('Edited task...', task);
+        } else {
+            // Adding new task
+            const newTask = {
+                ...task,
+                id: crypto.randomUUID(),
+            };
+            setAllTasks([...allTasks, newTask]);
+            console.log('Created new task...', newTask);
+        }
 
-        const newTask = {
-            id: crypto.randomUUID(),
-            title: e.target.taskTitleInput.value,
-            text: e.target.taskDescriptionText.value,
-            project: document.getElementById('projectValue').textContent,
-            dueDate: e.target.taskDateInput.value,
-            priority: document
-                .querySelector('input[name="priority"]:checked')
-                ?.value.toLowerCase(),
-        };
-
-        console.log('Created new task...', newTask);
-        setAllTasks([...allTasks, newTask]);
         setAddTask(false);
+        setIsEditTask(false);
     };
 
+    const handleEdit = (taskId, handleClose) => {
+        console.log('Edit clicked...');
+        console.log('Task ID', taskId);
+        setEditTask(allTasks.find((task) => task.id === taskId));
+        setIsEditTask(true);
+        handleClose();
+    };
+
+    // assign the handleAddTask function to the Add task button
     sidebarButtons.find((button) => button.name === 'Add task').onClick =
         handleAddTask;
 
@@ -83,10 +96,11 @@ function App() {
                 </div>
             </Sidebar>
             <Content>
-                {addTask && (
+                {(addTask || isEditTask) && (
                     <TaskForm
                         handleCancel={handleCancel}
                         handleConfirm={handleConfirm}
+                        task={isEditTask ? editTask : null}
                     />
                 )}
                 <ToDoList>
@@ -95,6 +109,7 @@ function App() {
                         name="All"
                         tasks={allTasks}
                         handleTaskDeleted={handleTaskDeleted}
+                        handleEdit={handleEdit}
                     />
                     <Project
                         id="generalProject"

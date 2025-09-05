@@ -24,7 +24,13 @@ function ProjectHeader({ projectName, iconSrc, onClick }) {
     );
 }
 
-export default function Project({ id, name, tasks, handleTaskDeleted }) {
+export default function Project({
+    id,
+    name,
+    tasks,
+    handleTaskDeleted,
+    handleEdit,
+}) {
     const [isExpanded, setIsExpanded] = useState(true);
 
     const handleExpand = () => {
@@ -42,6 +48,7 @@ export default function Project({ id, name, tasks, handleTaskDeleted }) {
                             : tasks.filter((task) => task.project === name)
                     }
                     handleTaskDeleted={handleTaskDeleted}
+                    handleEdit={handleEdit}
                 />
             );
         }
