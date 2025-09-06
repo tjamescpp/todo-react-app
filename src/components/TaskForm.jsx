@@ -85,7 +85,9 @@ export default function TaskForm({ handleCancel, handleConfirm, task }) {
                                 </Button>
                                 {isDropdown && (
                                     <ProjectList
-                                        projects={projects}
+                                        projects={projects.map(
+                                            (project) => project.name
+                                        )}
                                         handleProjectValue={handleProjectValue}
                                     />
                                 )}

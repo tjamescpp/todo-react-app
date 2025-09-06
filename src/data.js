@@ -40,4 +40,9 @@ export const tasks = [
     },
 ];
 
-export const projects = ['All', 'General', 'Fitness', 'School'];
+export const projects = [
+    { name: 'All', id: 'allProject' },
+    { name: 'General', id: 'generalProject' },
+    { name: 'Fitness', id: 'fitnessProject' },
+    { name: 'School', id: 'schoolProject' },
+];

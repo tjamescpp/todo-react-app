@@ -9,14 +9,18 @@ import SidebarHeader from './components/SidebarHeader';
 import SidebarList from './components/SidebarList';
 import ToDoList from './components/ToDoList.jsx';
 import TaskForm from './components/TaskForm.jsx';
-import { users, tasks } from './data.js';
+import { users, tasks, projects } from './data.js';
+import projectIcon from '/icons/pound.svg';
 
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);
+    const [allProjects, setAllProjects] = useState(projects);
     const [addTask, setAddTask] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
     const [editTask, setEditTask] = useState(null);
-    // const [newTask, setNewTask] = useState(null);
+    const [status, setStatus] = useState('dashboard');
+    const [addNewProject, setAddNewProject] = useState(false);
+    const [newProjectName, setNewProjectName] = useState('');
 
     console.log(allTasks);
 
@@ -66,9 +70,53 @@ function App() {
         handleClose();
     };
 
+    const handleDashboard = () => {
+        console.log('Dashboard clicked...');
+        setStatus('dashboard');
+    };
+
+    const handleProjectButton = (e) => {
+        console.log(e.target.textContent);
+        setStatus(e.target.textContent);
+    };
+
+    const handleNewProject = () => {
+        setAddNewProject(!addNewProject);
+    };
+
+    const handleNewProjectInput = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (!newProjectName.trim()) return;
+
+            const project = {
+                name: newProjectName,
+                id: `${newProjectName.toLowerCase()}Project`,
+            };
+
+            projectButtons.push({
+                ...project,
+                src: projectIcon,
+                onClick: null,
+            });
+
+            setAllProjects([...allProjects, project]);
+            setNewProjectName('');
+            setAddNewProject(false);
+        }
+    };
+
     // assign the handleAddTask function to the Add task button
     sidebarButtons.find((button) => button.name === 'Add task').onClick =
         handleAddTask;
+
+    // assign the handleDashboard function to the Add task button
+    sidebarButtons.find((button) => button.name === 'Dashboard').onClick =
+        handleDashboard;
+
+    projectButtons.map((button) => (button.onClick = handleProjectButton));
+
+    // assign handleProjectButton to each project button
 
     return (
         <div id="container">
@@ -81,6 +129,7 @@ function App() {
                         className="sidebarBtn"
                         type="button"
                         id="newProjectBtn"
+                        onClick={handleNewProject}
                     >
                         <Icon
                             className="sidebarIcons"
@@ -89,6 +138,15 @@ function App() {
                         />
                         <p>New project</p>
                     </Button>
+                    {addNewProject && (
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            value={newProjectName}
+                            onChange={(e) => setNewProjectName(e.target.value)}
+                            onKeyDown={handleNewProjectInput} // only uses it on Enter
+                        />
+                    )}
                     <SidebarList
                         listId="projectSidebarList"
                         buttons={projectButtons}
@@ -104,31 +162,30 @@ function App() {
                     />
                 )}
                 <ToDoList>
-                    <Project
-                        id="allProject"
-                        name="All"
-                        tasks={allTasks}
-                        handleTaskDeleted={handleTaskDeleted}
-                        handleEdit={handleEdit}
-                    />
-                    <Project
-                        id="generalProject"
-                        name="General"
-                        tasks={allTasks}
-                        handleTaskDeleted={handleTaskDeleted}
-                    />
-                    <Project
-                        id="fitnessProject"
-                        name="Fitness"
-                        tasks={allTasks}
-                        handleTaskDeleted={handleTaskDeleted}
-                    />
-                    <Project
-                        id="schoolProject"
-                        name="School"
-                        tasks={allTasks}
-                        handleTaskDeleted={handleTaskDeleted}
-                    />
+                    {status === 'dashboard' &&
+                        allProjects.map((project) => (
+                            <Project
+                                key={project.id}
+                                id={project.id}
+                                name={project.name}
+                                tasks={allTasks}
+                                handleTaskDeleted={handleTaskDeleted}
+                                handleEdit={handleEdit}
+                            />
+                        ))}
+                    {allProjects.some((project) => project.name === status) &&
+                        allProjects
+                            .filter((project) => project.name === status)
+                            .map((project) => (
+                                <Project
+                                    key={project.id}
+                                    id={project.id}
+                                    name={project.name}
+                                    tasks={allTasks}
+                                    handleTaskDeleted={handleTaskDeleted}
+                                    handleEdit={handleEdit}
+                                />
+                            ))}
                 </ToDoList>
             </Content>
         </div>
@@ -168,23 +225,24 @@ const sidebarButtons = [
     },
 ];
 
-const projectIcon = '/icons/pound.svg';
-
 const projectButtons = [
     {
         name: 'General',
         id: 'generalProjectBtn',
         src: projectIcon,
+        onClick: null,
     },
     {
         name: 'Fitness',
         id: 'fitnessProjectBtn',
         src: projectIcon,
+        onClick: null,
     },
     {
         name: 'School',
         id: 'schoolProjectBtn',
         src: projectIcon,
+        onClick: null,
     },
 ];
 
