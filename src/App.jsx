@@ -75,6 +75,11 @@ function App() {
         setStatus('dashboard');
     };
 
+    const handleToday = () => {
+        console.log('Today clicked...');
+        setStatus('today');
+    };
+
     const handleProjectButton = (e) => {
         console.log(e.target.textContent);
         setStatus(e.target.textContent);
@@ -113,6 +118,10 @@ function App() {
     // assign the handleDashboard function to the Add task button
     sidebarButtons.find((button) => button.name === 'Dashboard').onClick =
         handleDashboard;
+
+    // assign the handleDashboard function to the Add task button
+    sidebarButtons.find((button) => button.name === 'Today').onClick =
+        handleToday;
 
     projectButtons.map((button) => (button.onClick = handleProjectButton));
 
@@ -173,6 +182,19 @@ function App() {
                                 handleEdit={handleEdit}
                             />
                         ))}
+                    {status === 'today' &&
+                        allProjects.map((project) => (
+                            <Project
+                                key={project.id}
+                                id={project.id}
+                                name={project.name}
+                                tasks={allTasks.filter(
+                                    (task) => task.dueDate === getTodaysDate()
+                                )}
+                                handleTaskDeleted={handleTaskDeleted}
+                                handleEdit={handleEdit}
+                            />
+                        ))}
                     {allProjects.some((project) => project.name === status) &&
                         allProjects
                             .filter((project) => project.name === status)
@@ -211,12 +233,12 @@ const sidebarButtons = [
         src: '/icons/home-outline.svg',
         onClick: null,
     },
-    {
-        name: 'Inbox',
-        id: 'inboxBtn',
-        src: '/icons/inbox.svg',
-        onClick: null,
-    },
+    // {
+    //     name: 'Inbox',
+    //     id: 'inboxBtn',
+    //     src: '/icons/inbox.svg',
+    //     onClick: null,
+    // },
     {
         name: 'Today',
         id: 'todayBtn',
@@ -245,5 +267,17 @@ const projectButtons = [
         onClick: null,
     },
 ];
+
+const getTodaysDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+
+    const formatted = `${yyyy}-${mm}-${dd}`;
+    console.log(formatted); // "2025-08-18"
+
+    return formatted;
+};
 
 export default App;
