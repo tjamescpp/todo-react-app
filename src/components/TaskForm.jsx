@@ -4,9 +4,14 @@ import Icon from './Icon';
 import { projects } from '../data';
 import { useEffect } from 'react';
 
-export default function TaskForm({ handleCancel, handleConfirm, task }) {
+export default function TaskForm({
+    handleCancel,
+    handleConfirm,
+    task,
+    projectName,
+}) {
     const [isDropdown, setIsDropdown] = useState(false);
-    const [projectValue, setProjectValue] = useState('Project');
+    const [projectValue, setProjectValue] = useState(projectName);
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
     const [dueDate, setDueDate] = useState('');
@@ -19,8 +24,8 @@ export default function TaskForm({ handleCancel, handleConfirm, task }) {
             setTitle(task.title || '');
             setText(task.text || '');
             setDueDate(task.dueDate || '');
-            setPriority(task.priority || 'p2');
-            setProject(task.project || 'General');
+            setPriority(task.priority || '');
+            setProject(task.project || '');
         }
     }, [task]);
 
@@ -37,6 +42,7 @@ export default function TaskForm({ handleCancel, handleConfirm, task }) {
     };
 
     console.log('Editing task:', task);
+    console.log('Project:', projectValue);
 
     const handleProjectDropdown = () => {
         console.log('Project dropdown clicked...');

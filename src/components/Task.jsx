@@ -4,6 +4,9 @@ import Icon from './Icon';
 import TaskForm from './TaskForm';
 
 export function TaskList({ tasks, handleTaskDeleted, handleEdit }) {
+    if (tasks.length === 0) {
+        return <p>No tasks</p>;
+    }
     return (
         <ul className="taskList">
             {tasks.map((task) => {

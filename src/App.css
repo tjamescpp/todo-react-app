@@ -36,8 +36,7 @@
     height: 20px;
 }
 
-.sidebarBtn,
-.projectAddTaskBtn {
+.sidebarBtn {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -347,16 +346,26 @@ textarea {
     font-weight: 650;
 }
 
-#addTaskContentBtn,
-.projectAddTaskBtn {
+.projectAddTaskBtn,
+.projectDeleteBtn {
+    display: flex;
+    gap: 4px;
     font-size: 0.9rem;
     background-color: var(--main-bg);
     cursor: pointer;
+    align-items: center;
+    padding: 4px;
+    border-radius: 5px;
+    margin-left: 18px;
 }
 
-#addTaskContentBtn:hover,
-.projectAddTaskBtn:hover {
-    color: var(--button-red-hover);
+.projectBtns {
+    display: flex;
+}
+
+.projectAddTaskBtn:hover,
+.projectDeleteBtn:hover {
+    background-color: lightgray;
 }
 
 .contentIcons {
