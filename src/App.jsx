@@ -205,7 +205,9 @@ function App() {
                         handleCancel={handleCancel}
                         handleConfirm={handleConfirm}
                         task={isEditTask ? editTask : null}
-                        projectName={addTaskProject}
+                        projectName={
+                            isEditTask ? editTask.name : addTaskProject
+                        }
                     />
                 )}
                 <div id="contentHeader" className={scrolled ? 'scrolled' : ''}>

@@ -26,6 +26,7 @@ export default function TaskForm({
             setDueDate(task.dueDate || '');
             setPriority(task.priority || '');
             setProject(task.project || '');
+            setProjectValue(task.project || '');
         }
     }, [task]);
 
