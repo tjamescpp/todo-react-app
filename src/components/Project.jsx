@@ -30,6 +30,7 @@ export default function Project({
     tasks,
     handleTaskDeleted,
     handleEdit,
+    handleAddTask,
 }) {
     const [isExpanded, setIsExpanded] = useState(true);
 
@@ -41,15 +42,30 @@ export default function Project({
     const showTaskList = () => {
         if (isExpanded) {
             return (
-                <TaskList
-                    tasks={
-                        name === 'All'
-                            ? tasks
-                            : tasks.filter((task) => task.project === name)
-                    }
-                    handleTaskDeleted={handleTaskDeleted}
-                    handleEdit={handleEdit}
-                />
+                <>
+                    <TaskList
+                        tasks={
+                            name === 'All'
+                                ? tasks
+                                : tasks.filter((task) => task.project === name)
+                        }
+                        handleTaskDeleted={handleTaskDeleted}
+                        handleEdit={handleEdit}
+                    />
+                    <Button
+                        key={`${id}Btn`}
+                        className="projectAddTaskBtn"
+                        type="button"
+                        onClick={handleAddTask}
+                    >
+                        <Icon
+                            className="sidebarIcons"
+                            src="/icons/plus.svg"
+                            alt="add"
+                        />
+                        <p id={name}>Add task</p>
+                    </Button>
+                </>
             );
         }
     };

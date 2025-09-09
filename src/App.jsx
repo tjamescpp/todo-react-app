@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Button from './components/Button';
-import Content from './components/Content';
 import Icon from './components/Icon';
 import Project from './components/Project.jsx';
 import Sidebar from './components/Sidebar';
@@ -12,7 +11,6 @@ import TaskForm from './components/TaskForm.jsx';
 import { TaskList } from './components/Task.jsx';
 import { users, tasks, projects } from './data.js';
 import projectIcon from '/icons/pound.svg';
-import ToDoWrapper from './components/ToDoWrapper.jsx';
 
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);
@@ -214,7 +212,7 @@ function App() {
                     <p>Tasker</p>
                     <p id="status">/ {status.toLowerCase()}</p>
                 </div>
-                <ToDoWrapper>
+                <div id="toDoWrapper">
                     <ToDoList>
                         {status === 'dashboard' &&
                             allProjects.map((project) => (
@@ -226,20 +224,8 @@ function App() {
                                         tasks={allTasks}
                                         handleTaskDeleted={handleTaskDeleted}
                                         handleEdit={handleEdit}
+                                        handleAddTask={handleAddTask}
                                     />
-                                    <Button
-                                        key={`${project.id}Btn`}
-                                        className="projectAddTaskBtn"
-                                        type="button"
-                                        onClick={handleAddTask}
-                                    >
-                                        <Icon
-                                            className="sidebarIcons"
-                                            src="/icons/plus.svg"
-                                            alt="add"
-                                        />
-                                        <p id={project.name}>Add task</p>
-                                    </Button>
                                 </div>
                             ))}
                         {status === 'today' && (
@@ -308,7 +294,7 @@ function App() {
                                     </div>
                                 ))}
                     </ToDoList>
-                </ToDoWrapper>
+                </div>
             </div>
         </div>
     );
