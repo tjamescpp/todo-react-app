@@ -3,6 +3,7 @@
     grid-template-columns: 1fr 5fr;
     grid-template-rows: 1fr;
     height: 100vh;
+    width: 100vw;
 }
 
 /* ----- SIDEBAR ----- */
@@ -324,28 +325,54 @@ textarea {
 
 #content {
     display: flex;
-    justify-content: center;
-    overflow: auto;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: auto;
     grid-area: 1 / 2 / 3 / 3;
     border: none;
     background-color: var(--main-bg);
     min-width: 700px;
-    scrollbar-width: thin;
-    scrollbar-color: lightgray var(--main-bg);
+    width: 100%;
+}
+
+#contentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    font-size: 1.3rem;
+    font-weight: 400;
+    padding: 12px;
+    background-color: var(--main-bg);
+}
+
+#status {
+    font-size: 1rem;
+}
+
+#contentHeader.scrolled {
+    border-bottom: 1px solid white;
+}
+
+#toDoWrapper {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+#toDoWrapper.scrolled {
+    border-top: 1px solid var(--button-gray);
 }
 
 #toDoList {
     display: flex;
     flex-direction: column;
-    width: clamp(600px, 50%, 700px);
     background-color: var(--main-bg);
     gap: 16px;
-    padding: 40px;
-}
-
-#contentHeader {
-    font-size: 1.5rem;
-    font-weight: 650;
+    /* margin: 0 auto; */
+    width: 675px;
+    padding: 24px;
 }
 
 .projectAddTaskBtn,
@@ -367,7 +394,7 @@ textarea {
 
 .projectAddTaskBtn:hover,
 .projectDeleteBtn:hover {
-    background-color: lightgray;
+    background-color: var(--button-gray);
 }
 
 .contentIcons {
@@ -396,11 +423,15 @@ textarea {
     gap: 12px;
 }
 
+.taskList {
+    padding: 12px;
+}
+
 .project {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
+    /* padding: 24px; */
 }
 
 .projectTitle {

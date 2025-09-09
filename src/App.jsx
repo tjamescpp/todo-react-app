@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Button from './components/Button';
 import Content from './components/Content';
@@ -12,6 +12,7 @@ import TaskForm from './components/TaskForm.jsx';
 import { TaskList } from './components/Task.jsx';
 import { users, tasks, projects } from './data.js';
 import projectIcon from '/icons/pound.svg';
+import ToDoWrapper from './components/ToDoWrapper.jsx';
 
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);
@@ -23,8 +24,28 @@ function App() {
     const [addNewProject, setAddNewProject] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
     const [addTaskProject, setAddTaskProject] = useState(null);
+    const [scrolled, setScrolled] = useState(false);
+
+    const contentRef = useRef(null);
 
     console.log(allTasks);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (contentRef.current.scrollTop > 0) {
+                setScrolled(true);
+            } else {
+                setScrolled(false);
+            }
+        };
+
+        const contentEl = contentRef.current;
+        contentEl.addEventListener('scroll', handleScroll);
+
+        return () => {
+            contentEl.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const handleTaskDeleted = (taskId) => {
         console.log('Deleting task...');
@@ -180,7 +201,7 @@ function App() {
                     />
                 </div>
             </Sidebar>
-            <Content>
+            <div id="content" ref={contentRef}>
                 {(addTask || isEditTask) && (
                     <TaskForm
                         handleCancel={handleCancel}
@@ -189,50 +210,14 @@ function App() {
                         projectName={addTaskProject}
                     />
                 )}
-                <ToDoList>
-                    {status === 'dashboard' &&
-                        allProjects.map((project) => (
-                            <div key={`${project.id}Key`}>
-                                <Project
-                                    key={project.id}
-                                    id={project.id}
-                                    name={project.name}
-                                    tasks={allTasks}
-                                    handleTaskDeleted={handleTaskDeleted}
-                                    handleEdit={handleEdit}
-                                />
-                                <Button
-                                    key={`${project.id}Btn`}
-                                    className="projectAddTaskBtn"
-                                    type="button"
-                                    onClick={handleAddTask}
-                                >
-                                    <Icon
-                                        className="sidebarIcons"
-                                        src="/icons/plus.svg"
-                                        alt="add"
-                                    />
-                                    <p id={project.name}>Add task</p>
-                                </Button>
-                            </div>
-                        ))}
-                    {status === 'today' && (
-                        <>
-                            <p className="projectTitle">Today</p>
-                            <TaskList
-                                tasks={allTasks.filter(
-                                    (task) => task.dueDate === getTodaysDate()
-                                )}
-                                handleTaskDeleted={handleTaskDeleted}
-                                handleEdit={handleEdit}
-                            />
-                        </>
-                    )}
-                    {/* Displays project for project sidebar buttons */}
-                    {allProjects.some((project) => project.name === status) &&
-                        allProjects
-                            .filter((project) => project.name === status)
-                            .map((project) => (
+                <div id="contentHeader" className={scrolled ? 'scrolled' : ''}>
+                    <p>Tasker</p>
+                    <p id="status">/ {status.toLowerCase()}</p>
+                </div>
+                <ToDoWrapper>
+                    <ToDoList>
+                        {status === 'dashboard' &&
+                            allProjects.map((project) => (
                                 <div key={`${project.id}Key`}>
                                     <Project
                                         key={project.id}
@@ -242,43 +227,89 @@ function App() {
                                         handleTaskDeleted={handleTaskDeleted}
                                         handleEdit={handleEdit}
                                     />
-                                    <div
-                                        key={`${project.id}Btns`}
-                                        className="projectBtns"
+                                    <Button
+                                        key={`${project.id}Btn`}
+                                        className="projectAddTaskBtn"
+                                        type="button"
+                                        onClick={handleAddTask}
                                     >
-                                        <Button
-                                            key={`${project.id}AddBtn`}
-                                            className="projectAddTaskBtn"
-                                            type="button"
-                                            onClick={handleAddTask}
-                                        >
-                                            <Icon
-                                                className="sidebarIcons"
-                                                id={project.name}
-                                                src="/icons/plus.svg"
-                                                alt="add"
-                                            />
-                                        </Button>
-                                        <Button
-                                            key={`${project.id}DeleteBtn`}
-                                            type="Button"
-                                            className="projectDeleteBtn"
-                                            onClick={() =>
-                                                handleDeleteProject(
-                                                    project.name
-                                                )
-                                            }
-                                        >
-                                            <Icon
-                                                className="sidebarIcons"
-                                                src="/icons/trash-can-outline.svg"
-                                            />
-                                        </Button>
-                                    </div>
+                                        <Icon
+                                            className="sidebarIcons"
+                                            src="/icons/plus.svg"
+                                            alt="add"
+                                        />
+                                        <p id={project.name}>Add task</p>
+                                    </Button>
                                 </div>
                             ))}
-                </ToDoList>
-            </Content>
+                        {status === 'today' && (
+                            <>
+                                <TaskList
+                                    tasks={allTasks.filter(
+                                        (task) =>
+                                            task.dueDate === getTodaysDate()
+                                    )}
+                                    handleTaskDeleted={handleTaskDeleted}
+                                    handleEdit={handleEdit}
+                                />
+                            </>
+                        )}
+                        {/* Displays project for project sidebar buttons */}
+                        {allProjects.some(
+                            (project) => project.name === status
+                        ) &&
+                            allProjects
+                                .filter((project) => project.name === status)
+                                .map((project) => (
+                                    <div key={`${project.id}Key`}>
+                                        <Project
+                                            key={project.id}
+                                            id={project.id}
+                                            name={project.name}
+                                            tasks={allTasks}
+                                            handleTaskDeleted={
+                                                handleTaskDeleted
+                                            }
+                                            handleEdit={handleEdit}
+                                        />
+                                        <div
+                                            key={`${project.id}Btns`}
+                                            className="projectBtns"
+                                        >
+                                            <Button
+                                                key={`${project.id}AddBtn`}
+                                                className="projectAddTaskBtn"
+                                                type="button"
+                                                onClick={handleAddTask}
+                                            >
+                                                <Icon
+                                                    className="sidebarIcons"
+                                                    id={project.name}
+                                                    src="/icons/plus.svg"
+                                                    alt="add"
+                                                />
+                                            </Button>
+                                            <Button
+                                                key={`${project.id}DeleteBtn`}
+                                                type="Button"
+                                                className="projectDeleteBtn"
+                                                onClick={() =>
+                                                    handleDeleteProject(
+                                                        project.name
+                                                    )
+                                                }
+                                            >
+                                                <Icon
+                                                    className="sidebarIcons"
+                                                    src="/icons/trash-can-outline.svg"
+                                                />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+                    </ToDoList>
+                </ToDoWrapper>
+            </div>
         </div>
     );
 }
