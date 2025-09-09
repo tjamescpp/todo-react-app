@@ -18,7 +18,7 @@ function App() {
     const [addTask, setAddTask] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
     const [editTask, setEditTask] = useState(null);
-    const [status, setStatus] = useState('dashboard');
+    const [status, setStatus] = useState('home');
     const [addNewProject, setAddNewProject] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
     const [addTaskProject, setAddTaskProject] = useState(null);
@@ -96,8 +96,8 @@ function App() {
     };
 
     const handleDashboard = () => {
-        console.log('Dashboard clicked...');
-        setStatus('dashboard');
+        console.log('Home clicked...');
+        setStatus('home');
     };
 
     const handleToday = () => {
@@ -145,7 +145,7 @@ function App() {
         setAllProjects(allProjects.filter((p) => p.name !== projectName));
         projectButtons = projectButtons.filter((p) => p.name !== projectName);
         setAllTasks(allTasks.filter((t) => t.project !== projectName));
-        setStatus('dashboard');
+        setStatus('home');
     };
 
     // assign the handleAddTask function to the Add task button
@@ -153,7 +153,7 @@ function App() {
         handleAddTask;
 
     // assign the handleDashboard function to the Add task button
-    sidebarButtons.find((button) => button.name === 'Dashboard').onClick =
+    sidebarButtons.find((button) => button.name === 'Home').onClick =
         handleDashboard;
 
     // assign the handleDashboard function to the Add task button
@@ -214,7 +214,7 @@ function App() {
                 </div>
                 <div id="toDoWrapper">
                     <ToDoList>
-                        {status === 'dashboard' &&
+                        {status === 'home' &&
                             allProjects.map((project) => (
                                 <div key={`${project.id}Key`}>
                                     <Project
@@ -257,40 +257,11 @@ function App() {
                                                 handleTaskDeleted
                                             }
                                             handleEdit={handleEdit}
+                                            handleDeleteProject={
+                                                handleDeleteProject
+                                            }
+                                            projectView={true}
                                         />
-                                        <div
-                                            key={`${project.id}Btns`}
-                                            className="projectBtns"
-                                        >
-                                            <Button
-                                                key={`${project.id}AddBtn`}
-                                                className="projectAddTaskBtn"
-                                                type="button"
-                                                onClick={handleAddTask}
-                                            >
-                                                <Icon
-                                                    className="sidebarIcons"
-                                                    id={project.name}
-                                                    src="/icons/plus.svg"
-                                                    alt="add"
-                                                />
-                                            </Button>
-                                            <Button
-                                                key={`${project.id}DeleteBtn`}
-                                                type="Button"
-                                                className="projectDeleteBtn"
-                                                onClick={() =>
-                                                    handleDeleteProject(
-                                                        project.name
-                                                    )
-                                                }
-                                            >
-                                                <Icon
-                                                    className="sidebarIcons"
-                                                    src="/icons/trash-can-outline.svg"
-                                                />
-                                            </Button>
-                                        </div>
                                     </div>
                                 ))}
                     </ToDoList>
@@ -314,8 +285,8 @@ const sidebarButtons = [
         onClick: null,
     },
     {
-        name: 'Dashboard',
-        id: 'dashboardBtn',
+        name: 'Home',
+        id: 'homeBtn',
         src: '/icons/home-outline.svg',
         onClick: null,
     },

@@ -386,15 +386,17 @@ textarea {
     padding: 4px;
     border-radius: 5px;
     margin-left: 18px;
+    width: 100px;
 }
 
 .projectBtns {
     display: flex;
+    /* justify-content: space-between; */
 }
 
 .projectAddTaskBtn:hover,
 .projectDeleteBtn:hover {
-    background-color: var(--button-gray);
+    background-color: lightgray;
 }
 
 .contentIcons {
