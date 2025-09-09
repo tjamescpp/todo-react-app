@@ -330,6 +330,8 @@ textarea {
     border: none;
     background-color: var(--main-bg);
     min-width: 700px;
+    scrollbar-width: thin;
+    scrollbar-color: lightgray var(--main-bg);
 }
 
 #toDoList {
