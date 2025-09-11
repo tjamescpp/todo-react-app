@@ -383,14 +383,15 @@ textarea {
     background-color: var(--main-bg);
     cursor: pointer;
     align-items: center;
-    padding: 4px;
+    justify-content: center;
+    padding: 8px;
     border-radius: 5px;
-    margin-left: 18px;
-    width: 100px;
+    width: 125px;
 }
 
 .projectBtns {
     display: flex;
+    gap: 4px;
     /* justify-content: space-between; */
 }
 

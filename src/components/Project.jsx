@@ -8,7 +8,7 @@ const icons = {
     collapse: '/icons/menu-right.svg',
 };
 
-function ProjectHeader({ projectName, iconSrc, onClick }) {
+export function ProjectHeader({ projectName, iconSrc, onClick }) {
     return (
         <div className="projectHeader">
             <Button className="listExpandCollapse" onClick={onClick}>

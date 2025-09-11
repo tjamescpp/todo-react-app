@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Button from './components/Button';
 import Icon from './components/Icon';
-import Project from './components/Project.jsx';
+import Project, { ProjectHeader } from './components/Project.jsx';
 import Sidebar from './components/Sidebar';
 import SidebarHeader from './components/SidebarHeader';
 import SidebarList from './components/SidebarList';
@@ -232,6 +232,10 @@ function App() {
                             ))}
                         {status === 'today' && (
                             <>
+                                <ProjectHeader
+                                    projectName="Today"
+                                    iconSrc="/icons/calendar-check.svg"
+                                />
                                 <TaskList
                                     tasks={allTasks.filter(
                                         (task) =>
