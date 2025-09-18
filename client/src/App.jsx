@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
-import Button from './components/Button';
-import Icon from './components/Icon';
+import Button from './components/Button.jsx';
+import Icon from './components/Icon.jsx';
 import Project, { ProjectHeader } from './components/Project.jsx';
-import Sidebar from './components/Sidebar';
-import SidebarHeader from './components/SidebarHeader';
-import SidebarList from './components/SidebarList';
+import Sidebar from './components/Sidebar.jsx';
+import SidebarHeader from './components/SidebarHeader.jsx';
+import SidebarList from './components/SidebarList.jsx';
 import ToDoList from './components/ToDoList.jsx';
 import TaskForm from './components/TaskForm.jsx';
 import { TaskList } from './components/Task.jsx';
