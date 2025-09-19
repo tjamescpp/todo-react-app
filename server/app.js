@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => res.send('Hello, world!'));
 app.use('/users', routes.usersRouter);
 app.use('/tasks', routes.tasksRouter);
+app.use('/projects', routes.projectsRouter);
 
 // close prisma client database connection
 process.on('SIGINT', async () => {
