@@ -1,9 +1,32 @@
 import express from 'express';
+import { PrismaClient } from './generated/prisma/index.js';
+import routes from './routes/index.js';
+// import usersRouter from './routes/users.js';
+import prisma from './prisma.js';
+
 const app = express();
-
-app.get('/', (req, res) => res.send('Hello, world!'));
-
 const PORT = process.env.PORT || 3000;
+
+// body parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// routes
+app.get('/', (req, res) => res.send('Hello, world!'));
+app.use('/users', routes.usersRouter);
+
+// close prisma client database connection
+process.on('SIGINT', async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+});
+
+// listen to the port
 app.listen(PORT, (error) => {
     // This is important!
     // Without this, any startup errors will silently fail
