@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// models
+
+model Task {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  title     String    @db.VarChar(255)
+  text      String
+  project   Project?  @relation(fields: [projectId], references: [id]) // one to many
+  projectId Int?
+  user      User      @relation(fields: [userId], references: [id]) // one to many
+  userId    Int
+}
+
+model Project {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(30)
+  tasks   Task[]
+  user    User    @relation(fields: [userId], references: [id]) // one to many
+  userId  Int
+
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id]) // one to one
+  userId Int     @unique
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  email     String    @unique @db.VarChar(320)
+  firstName String?   @db.VarChar(50)
+  lastName  String?   @db.VarChar(50)
+  username  String    @db.VarChar(50)
+  tasks     Task[]
+  projects  Project[] // * to many
+  profile   Profile? // one to one
+}
