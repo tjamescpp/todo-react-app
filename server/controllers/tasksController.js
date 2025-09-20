@@ -10,7 +10,7 @@ async function getAllTasks(req, res) {
         cacheStrategy: { ttl: 60 },
     });
 
-    allTasksFormatted = allTasks.map((task) => ({
+    const allTasksFormatted = allTasks.map((task) => ({
         ...task,
         dueDate: dateUtils.toDateString(task.dueDate),
     }));

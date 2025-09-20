@@ -26,9 +26,7 @@ export function ProjectHeader({ projectName, iconSrc, onClick }) {
 }
 
 export default function Project({
-    id,
-    name,
-    tasks,
+    project,
     handleTaskDeleted,
     handleEdit,
     handleAddTask,
@@ -52,13 +50,14 @@ export default function Project({
                         //         ? tasks
                         //         : tasks.filter((task) => task.project === name)
                         // }
-                        tasks={tasks}
+                        tasks={project.tasks}
+                        projectName={project.name}
                         handleTaskDeleted={handleTaskDeleted}
                         handleEdit={handleEdit}
                     />
                     <div className="projectBtns">
                         <Button
-                            key={`${id}Btn`}
+                            key={`${project.id}Btn`}
                             className="projectAddTaskBtn"
                             type="button"
                             onClick={handleAddTask}
@@ -68,14 +67,16 @@ export default function Project({
                                 src="/icons/plus.svg"
                                 alt="add"
                             />
-                            <p id={name}>Add task</p>
+                            <p id={project.name}>Add task</p>
                         </Button>
                         {projectView && (
                             <Button
-                                key={`${id}DeleteBtn`}
+                                key={`${project.id}DeleteBtn`}
                                 type="Button"
                                 className="projectDeleteBtn"
-                                onClick={() => handleDeleteProject(name)}
+                                onClick={() =>
+                                    handleDeleteProject(project.name)
+                                }
                             >
                                 <Icon
                                     className="sidebarIcons"
@@ -91,9 +92,9 @@ export default function Project({
     };
 
     return (
-        <div className="project" id={id}>
+        <div className="project" id={project.id}>
             <ProjectHeader
-                projectName={name}
+                projectName={project.name}
                 iconSrc={isExpanded ? icons.expand : icons.collapse}
                 onClick={handleExpand}
             />

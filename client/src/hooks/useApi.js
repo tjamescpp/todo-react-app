@@ -1,5 +1,4 @@
-// custom hook for api calls
-
+// custom hook for API calls
 import { useState, useCallback } from 'react';
 
 export const useApi = () => {

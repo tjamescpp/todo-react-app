@@ -9,13 +9,13 @@ import SidebarList from './components/SidebarList.jsx';
 import ToDoList from './components/ToDoList.jsx';
 import TaskForm from './components/TaskForm.jsx';
 import { TaskList } from './components/Task.jsx';
-import { users, tasks } from './data.js';
+import { users } from './data.js';
 import projectIcon from '/icons/pound.svg';
 import { LoadingSpinner } from './components/LoadingSpinner.jsx';
 import { useApi } from './hooks/useApi.js';
 
 function App() {
-    const [allTasks, setAllTasks] = useState(tasks);
+    const [allTasks, setAllTasks] = useState([]);
     const [allProjects, setAllProjects] = useState([]);
     const [addTask, setAddTask] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
@@ -32,7 +32,23 @@ function App() {
     const contentRef = useRef(null);
 
     console.log(allTasks);
+    console.log(allProjects);
 
+    // fetch all tasks
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const data = await apiCall('/tasks');
+                setAllTasks(data);
+            } catch (error) {
+                console.error('Failed to fetch tasks', error);
+            }
+        };
+
+        fetchTasks();
+    }, [apiCall]);
+
+    // fetch all projects
     useEffect(() => {
         const fetchProjects = async () => {
             try {
@@ -44,17 +60,6 @@ function App() {
         };
 
         fetchProjects();
-
-        // fetch('http://localhost:3000/projects', { mode: 'cors' })
-        //     .then((response) => {
-        //         if (response.status >= 400) {
-        //             throw new Error('server error');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then((response) => setAllProjects(response))
-        //     .catch((error) => setError(error))
-        //     .finally(() => setLoading(false));
     }, [apiCall]);
 
     // const fetchProjects = async () => {
@@ -267,9 +272,7 @@ function App() {
                                         <div key={`${project.id}Key`}>
                                             <Project
                                                 key={project.id}
-                                                id={project.id}
-                                                name={project.name}
-                                                tasks={project.tasks}
+                                                project={project}
                                                 handleTaskDeleted={
                                                     handleTaskDeleted
                                                 }
@@ -290,6 +293,7 @@ function App() {
                                                     task.dueDate ===
                                                     getTodaysDate()
                                             )}
+                                            projects={allProjects}
                                             handleTaskDeleted={
                                                 handleTaskDeleted
                                             }

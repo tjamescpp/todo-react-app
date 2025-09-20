@@ -3,7 +3,12 @@ import Button from './Button';
 import Icon from './Icon';
 import TaskForm from './TaskForm';
 
-export function TaskList({ tasks, handleTaskDeleted, handleEdit }) {
+export function TaskList({
+    tasks,
+    projectName,
+    handleTaskDeleted,
+    handleEdit,
+}) {
     if (tasks.length === 0) {
         return <p>No tasks</p>;
     }
@@ -14,6 +19,7 @@ export function TaskList({ tasks, handleTaskDeleted, handleEdit }) {
                     <li key={task.id}>
                         <Task
                             task={task}
+                            projectName={projectName}
                             handleTaskDeleted={handleTaskDeleted}
                             handleEdit={handleEdit}
                         />
@@ -24,11 +30,17 @@ export function TaskList({ tasks, handleTaskDeleted, handleEdit }) {
     );
 }
 
-export default function Task({ task, handleTaskDeleted, handleEdit }) {
+export default function Task({
+    task,
+    projectName,
+    handleTaskDeleted,
+    handleEdit,
+}) {
     const [isClicked, setIsClicked] = useState(false);
 
     const handleClick = () => {
         console.log('Task clicked!');
+        console.log(task);
         setIsClicked(!isClicked);
     };
 
@@ -41,6 +53,7 @@ export default function Task({ task, handleTaskDeleted, handleEdit }) {
             {isClicked && (
                 <TaskDetails
                     task={task}
+                    projectName={projectName}
                     handleClose={handleClick}
                     handleTaskDeleted={handleTaskDeleted}
                     handleEdit={handleEdit}
@@ -50,8 +63,15 @@ export default function Task({ task, handleTaskDeleted, handleEdit }) {
     );
 }
 
-function TaskDetails({ task, handleClose, handleTaskDeleted, handleEdit }) {
+function TaskDetails({
+    task,
+    projectName,
+    handleClose,
+    handleTaskDeleted,
+    handleEdit,
+}) {
     // const [isEdit, setIsEdit] = useState(null);
+    console.log('Task details project: ', projectName);
 
     return (
         <div className="overlay">
@@ -95,7 +115,7 @@ function TaskDetails({ task, handleClose, handleTaskDeleted, handleEdit }) {
                     </div>
                     <SidebarDetail
                         name="Project"
-                        taskDetail={task.project}
+                        taskDetail={projectName}
                         iconSrc="/icons/pound.svg"
                     />
                     <SidebarDetail
