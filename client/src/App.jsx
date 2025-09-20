@@ -11,6 +11,8 @@ import TaskForm from './components/TaskForm.jsx';
 import { TaskList } from './components/Task.jsx';
 import { users, tasks } from './data.js';
 import projectIcon from '/icons/pound.svg';
+import { LoadingSpinner } from './components/LoadingSpinner.jsx';
+import { useApi } from './hooks/useApi.js';
 
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);
@@ -23,17 +25,37 @@ function App() {
     const [newProjectName, setNewProjectName] = useState('');
     const [addTaskProject, setAddTaskProject] = useState(null);
     const [scrolled, setScrolled] = useState(false);
+    // const [error, setError] = useState(null);
+    // const [loading, setLoading] = useState(true);
+    const { apiCall, loading, error } = useApi();
 
     const contentRef = useRef(null);
 
     console.log(allTasks);
 
     useEffect(() => {
-        fetch('http://localhost:3000/projects')
-            .then((response) => response.json())
-            .then((response) => setAllProjects(response))
-            .catch((error) => console.log(error));
-    }, []);
+        const fetchProjects = async () => {
+            try {
+                const data = await apiCall('/projects');
+                setAllProjects(data);
+            } catch (error) {
+                console.error('Failed to fetch projects', error);
+            }
+        };
+
+        fetchProjects();
+
+        // fetch('http://localhost:3000/projects', { mode: 'cors' })
+        //     .then((response) => {
+        //         if (response.status >= 400) {
+        //             throw new Error('server error');
+        //         }
+        //         return response.json();
+        //     })
+        //     .then((response) => setAllProjects(response))
+        //     .catch((error) => setError(error))
+        //     .finally(() => setLoading(false));
+    }, [apiCall]);
 
     // const fetchProjects = async () => {
     //     fetch('');
@@ -174,118 +196,139 @@ function App() {
     projectButtons.map((button) => (button.onClick = handleProjectButton));
 
     // assign handleProjectButton to each project button
-
-    return (
-        <div id="container">
-            <Sidebar>
-                <SidebarHeader user={users[0]} />
-                <SidebarList listId="sidebarList" buttons={sidebarButtons} />
-                <div id="projectsSidebar">
-                    <p id="projectListHeader">Projects</p>
-                    <Button
-                        className="sidebarBtn"
-                        type="button"
-                        id="newProjectBtn"
-                        onClick={handleNewProject}
-                    >
-                        <Icon
-                            className="sidebarIcons"
-                            src="/icons/plus.svg"
-                            alt="plus"
+    if (error) {
+        return <p>A network error has occured...</p>;
+    } else
+        return (
+            <div id="container">
+                <Sidebar>
+                    <SidebarHeader user={users[0]} />
+                    <SidebarList
+                        listId="sidebarList"
+                        buttons={sidebarButtons}
+                    />
+                    <div id="projectsSidebar">
+                        <p id="projectListHeader">Projects</p>
+                        <Button
+                            className="sidebarBtn"
+                            type="button"
+                            id="newProjectBtn"
+                            onClick={handleNewProject}
+                        >
+                            <Icon
+                                className="sidebarIcons"
+                                src="/icons/plus.svg"
+                                alt="plus"
+                            />
+                            <p>New project</p>
+                        </Button>
+                        {addNewProject && (
+                            <input
+                                type="text"
+                                placeholder="Name"
+                                value={newProjectName}
+                                onChange={(e) =>
+                                    setNewProjectName(e.target.value)
+                                }
+                                onKeyDown={handleNewProjectInput} // only uses it on Enter
+                            />
+                        )}
+                        <SidebarList
+                            listId="projectSidebarList"
+                            buttons={projectButtons}
                         />
-                        <p>New project</p>
-                    </Button>
-                    {addNewProject && (
-                        <input
-                            type="text"
-                            placeholder="Name"
-                            value={newProjectName}
-                            onChange={(e) => setNewProjectName(e.target.value)}
-                            onKeyDown={handleNewProjectInput} // only uses it on Enter
+                    </div>
+                </Sidebar>
+                <div id="content" ref={contentRef}>
+                    {(addTask || isEditTask) && (
+                        <TaskForm
+                            handleCancel={handleCancel}
+                            handleConfirm={handleConfirm}
+                            task={isEditTask ? editTask : null}
+                            projectName={
+                                isEditTask ? editTask.name : addTaskProject
+                            }
                         />
                     )}
-                    <SidebarList
-                        listId="projectSidebarList"
-                        buttons={projectButtons}
-                    />
-                </div>
-            </Sidebar>
-            <div id="content" ref={contentRef}>
-                {(addTask || isEditTask) && (
-                    <TaskForm
-                        handleCancel={handleCancel}
-                        handleConfirm={handleConfirm}
-                        task={isEditTask ? editTask : null}
-                        projectName={
-                            isEditTask ? editTask.name : addTaskProject
-                        }
-                    />
-                )}
-                <div id="contentHeader" className={scrolled ? 'scrolled' : ''}>
-                    <p>Tasker</p>
-                    <p id="status">/ {status.toLowerCase()}</p>
-                </div>
-                <div id="toDoWrapper">
-                    <ToDoList>
-                        {status === 'home' &&
-                            allProjects.map((project) => (
-                                <div key={`${project.id}Key`}>
-                                    <Project
-                                        key={project.id}
-                                        id={project.id}
-                                        name={project.name}
-                                        tasks={project.tasks}
-                                        handleTaskDeleted={handleTaskDeleted}
-                                        handleEdit={handleEdit}
-                                        handleAddTask={handleAddTask}
-                                    />
-                                </div>
-                            ))}
-                        {status === 'today' && (
-                            <>
-                                <ProjectHeader
-                                    projectName="Today"
-                                    iconSrc="/icons/calendar-check.svg"
-                                />
-                                <TaskList
-                                    tasks={allTasks.filter(
-                                        (task) =>
-                                            task.dueDate === getTodaysDate()
-                                    )}
-                                    handleTaskDeleted={handleTaskDeleted}
-                                    handleEdit={handleEdit}
-                                />
-                            </>
-                        )}
-                        {/* Displays project for project sidebar buttons */}
-                        {allProjects.some(
-                            (project) => project.name === status
-                        ) &&
-                            allProjects
-                                .filter((project) => project.name === status)
-                                .map((project) => (
-                                    <div key={`${project.id}Key`}>
-                                        <Project
-                                            key={project.id}
-                                            id={project.id}
-                                            name={project.name}
-                                            tasks={allTasks}
+                    <div
+                        id="contentHeader"
+                        className={scrolled ? 'scrolled' : ''}
+                    >
+                        <p>Tasker</p>
+                        <p id="status">/ {status.toLowerCase()}</p>
+                    </div>
+                    <div id="toDoWrapper">
+                        {loading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <ToDoList>
+                                {status === 'home' &&
+                                    allProjects.map((project) => (
+                                        <div key={`${project.id}Key`}>
+                                            <Project
+                                                key={project.id}
+                                                id={project.id}
+                                                name={project.name}
+                                                tasks={project.tasks}
+                                                handleTaskDeleted={
+                                                    handleTaskDeleted
+                                                }
+                                                handleEdit={handleEdit}
+                                                handleAddTask={handleAddTask}
+                                            />
+                                        </div>
+                                    ))}
+                                {status === 'today' && (
+                                    <>
+                                        <ProjectHeader
+                                            projectName="Today"
+                                            iconSrc="/icons/calendar-check.svg"
+                                        />
+                                        <TaskList
+                                            tasks={allTasks.filter(
+                                                (task) =>
+                                                    task.dueDate ===
+                                                    getTodaysDate()
+                                            )}
                                             handleTaskDeleted={
                                                 handleTaskDeleted
                                             }
                                             handleEdit={handleEdit}
-                                            handleDeleteProject={
-                                                handleDeleteProject
-                                            }
-                                            projectView={true}
                                         />
-                                    </div>
-                                ))}
-                    </ToDoList>
+                                    </>
+                                )}
+                                {/* Displays project for project sidebar buttons */}
+                                {allProjects.some(
+                                    (project) => project.name === status
+                                ) &&
+                                    allProjects
+                                        .filter(
+                                            (project) => project.name === status
+                                        )
+                                        .map((project) => (
+                                            <div key={`${project.id}Key`}>
+                                                <Project
+                                                    key={project.id}
+                                                    id={project.id}
+                                                    name={project.name}
+                                                    tasks={allTasks}
+                                                    handleTaskDeleted={
+                                                        handleTaskDeleted
+                                                    }
+                                                    handleEdit={handleEdit}
+                                                    handleDeleteProject={
+                                                        handleDeleteProject
+                                                    }
+                                                    projectView={true}
+                                                />
+                                            </div>
+                                        ))}
+                            </ToDoList>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
 }
 
 const sidebarButtons = [
