@@ -2,6 +2,7 @@ import Button from './Button';
 import Icon from './Icon';
 import { useState } from 'react';
 import { TaskList } from './Task';
+// import { useEffect } from 'react';
 
 const icons = {
     expand: '/icons/menu-down.svg',
@@ -46,11 +47,12 @@ export default function Project({
             return (
                 <>
                     <TaskList
-                        tasks={
-                            name === 'All'
-                                ? tasks
-                                : tasks.filter((task) => task.project === name)
-                        }
+                        // tasks={
+                        //     name === 'All'
+                        //         ? tasks
+                        //         : tasks.filter((task) => task.project === name)
+                        // }
+                        tasks={tasks}
                         handleTaskDeleted={handleTaskDeleted}
                         handleEdit={handleEdit}
                     />

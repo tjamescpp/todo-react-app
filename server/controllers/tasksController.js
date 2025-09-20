@@ -1,4 +1,5 @@
 import prisma from '../prisma.js';
+import { dateUtils } from '../utils/dateUtils.js';
 
 async function getAllTasks(req, res) {
     const allTasks = await prisma.task.findMany({
@@ -9,13 +10,18 @@ async function getAllTasks(req, res) {
         cacheStrategy: { ttl: 60 },
     });
 
-    res.json(allTasks);
+    allTasksFormatted = allTasks.map((task) => ({
+        ...task,
+        dueDate: dateUtils.toDateString(task.dueDate),
+    }));
+
+    res.json(allTasksFormatted);
 }
 
 async function createTask(req, res) {
     try {
         // date validation
-        const date = new Date(req.body.dueDate);
+        const date = dateUtils.toDateObject(req.body.dueDate);
 
         // check if the date is valid
         if (isNaN(date.getTime())) {

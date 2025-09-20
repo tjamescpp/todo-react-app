@@ -9,12 +9,12 @@ import SidebarList from './components/SidebarList.jsx';
 import ToDoList from './components/ToDoList.jsx';
 import TaskForm from './components/TaskForm.jsx';
 import { TaskList } from './components/Task.jsx';
-import { users, tasks, projects } from './data.js';
+import { users, tasks } from './data.js';
 import projectIcon from '/icons/pound.svg';
 
 function App() {
     const [allTasks, setAllTasks] = useState(tasks);
-    const [allProjects, setAllProjects] = useState(projects);
+    const [allProjects, setAllProjects] = useState([]);
     const [addTask, setAddTask] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
     const [editTask, setEditTask] = useState(null);
@@ -27,6 +27,17 @@ function App() {
     const contentRef = useRef(null);
 
     console.log(allTasks);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/projects')
+            .then((response) => response.json())
+            .then((response) => setAllProjects(response))
+            .catch((error) => console.log(error));
+    }, []);
+
+    // const fetchProjects = async () => {
+    //     fetch('');
+    // };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -223,7 +234,7 @@ function App() {
                                         key={project.id}
                                         id={project.id}
                                         name={project.name}
-                                        tasks={allTasks}
+                                        tasks={project.tasks}
                                         handleTaskDeleted={handleTaskDeleted}
                                         handleEdit={handleEdit}
                                         handleAddTask={handleAddTask}

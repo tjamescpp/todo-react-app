@@ -1,4 +1,5 @@
 import prisma from '../prisma.js';
+import { dateUtils } from '../utils/dateUtils.js';
 
 async function getAllProjects(req, res) {
     const projects = await prisma.project.findMany({
@@ -9,7 +10,16 @@ async function getAllProjects(req, res) {
         cacheStrategy: { ttl: 60 },
     });
 
-    res.json(projects);
+    // format tasks due dates
+    const projectsFormattedTasks = projects.map((project) => ({
+        ...project,
+        tasks: project.tasks.map((tasks) => ({
+            ...tasks,
+            dueDate: dateUtils.toDateString(tasks.dueDate),
+        })),
+    }));
+
+    res.json(projectsFormattedTasks);
 }
 
 async function createProject(req, res) {

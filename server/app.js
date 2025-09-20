@@ -3,13 +3,21 @@ import { PrismaClient } from './generated/prisma/index.js';
 import routes from './routes/index.js';
 // import usersRouter from './routes/users.js';
 import prisma from './prisma.js';
+import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// cors
+app.use(
+    cors({
+        origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+        credentials: true,
+    })
+);
 
 // routes
 app.get('/', (req, res) => res.send('Hello, world!'));
@@ -29,6 +37,7 @@ process.on('SIGTERM', async () => {
 });
 
 // listen to the port
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, (error) => {
     // This is important!
     // Without this, any startup errors will silently fail

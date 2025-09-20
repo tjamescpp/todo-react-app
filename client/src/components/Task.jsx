@@ -100,7 +100,7 @@ function TaskDetails({ task, handleClose, handleTaskDeleted, handleEdit }) {
                     />
                     <SidebarDetail
                         name="Due"
-                        taskDetail={task.dueDate}
+                        taskDetail={task.dueDate} // extract YYYY-MM-DD
                         iconSrc="/icons/calendar-blank.svg"
                     />
                     <SidebarDetail
