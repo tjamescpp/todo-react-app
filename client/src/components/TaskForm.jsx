@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import Button from './Button';
 import Icon from './Icon';
-import { projects } from '../data';
+// import { projects } from '../data';
 import { useEffect } from 'react';
 
 export default function TaskForm({
+    projects,
     handleCancel,
     handleConfirm,
     task,
@@ -16,7 +17,7 @@ export default function TaskForm({
     const [text, setText] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [priority, setPriority] = useState('');
-    const [project, setProject] = useState('');
+    const [projectId, setProjectId] = useState('');
 
     // when editing, load values from task into state
     useEffect(() => {
@@ -25,7 +26,7 @@ export default function TaskForm({
             setText(task.text || '');
             setDueDate(task.dueDate || '');
             setPriority(task.priority || '');
-            setProject(task.project || '');
+            setProjectId(task.project || '');
             setProjectValue(task.project || '');
         }
     }, [task]);
@@ -38,7 +39,7 @@ export default function TaskForm({
             text,
             dueDate,
             priority,
-            project,
+            projectId,
         });
     };
 
@@ -52,7 +53,7 @@ export default function TaskForm({
 
     const handleProjectValue = (value) => {
         setProjectValue(value);
-        setProject(value);
+        setProjectId(projects.find((project) => project.name === value).id);
         setIsDropdown(false);
     };
 

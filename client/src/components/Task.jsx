@@ -14,9 +14,9 @@ export function TaskList({
     }
     return (
         <ul className="taskList">
-            {tasks.map((task) => {
+            {tasks.map((task, idx) => {
                 return (
-                    <li key={task.id}>
+                    <li key={task.id ?? idx}>
                         <Task
                             task={task}
                             projectName={projectName}

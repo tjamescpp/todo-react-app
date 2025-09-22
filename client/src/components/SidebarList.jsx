@@ -1,26 +1,20 @@
 import Button from './Button';
 import Icon from './Icon';
 
-export default function SidebarList({
-    listId,
-    buttons,
-    buttonClass = 'sidebarBtn',
-    buttonType = 'button',
-    iconClass = 'sidebarIcons',
-}) {
+export default function SidebarList({ buttons }) {
     return (
-        <ul id={listId}>
+        <ul id={'sidebarList'}>
             {buttons.map((button) => {
                 return (
                     <li key={button.id}>
                         <Button
-                            className={buttonClass}
-                            type={buttonType}
+                            className={'sidebarBtn'}
+                            type={'button'}
                             id={button.id}
                             onClick={button.onClick}
                         >
                             <Icon
-                                className={iconClass}
+                                className={'sidebarIcons'}
                                 src={button.src}
                                 alt={button.name}
                             />

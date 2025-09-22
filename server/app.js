@@ -46,6 +46,6 @@ app.listen(PORT, (error) => {
         throw error;
     }
     console.log(
-        `My first Express app - listening on port http://localhost:${PORT}`
+        `My TODO Express app - listening on port http://localhost:${PORT}`
     );
 });

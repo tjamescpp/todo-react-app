@@ -12,14 +12,16 @@ const icons = {
 export function ProjectHeader({ projectName, iconSrc, onClick }) {
     return (
         <div className="projectHeader">
-            <Button className="listExpandCollapse" onClick={onClick}>
-                <Icon
-                    className="contentIcons"
-                    src={iconSrc}
-                    alt="Expand-Collapse"
-                    id="expandCollapseIcon"
-                ></Icon>
-            </Button>
+            {iconSrc && (
+                <Button className="listExpandCollapse" onClick={onClick}>
+                    <Icon
+                        className="contentIcons"
+                        src={iconSrc}
+                        alt="Expand-Collapse"
+                        id="expandCollapseIcon"
+                    ></Icon>
+                </Button>
+            )}
             <p className="projectTitle">{projectName}</p>
         </div>
     );
@@ -45,11 +47,6 @@ export default function Project({
             return (
                 <>
                     <TaskList
-                        // tasks={
-                        //     name === 'All'
-                        //         ? tasks
-                        //         : tasks.filter((task) => task.project === name)
-                        // }
                         tasks={project.tasks}
                         projectName={project.name}
                         handleTaskDeleted={handleTaskDeleted}

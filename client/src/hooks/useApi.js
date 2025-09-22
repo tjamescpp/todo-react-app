@@ -35,7 +35,7 @@ export const useApi = () => {
                 }
 
                 const data = await response.json();
-                console.log(`API response: ${data}`);
+                console.log(`API response status: ${response.status}`);
                 return data;
             } catch (err) {
                 console.error('API Error:', err);
