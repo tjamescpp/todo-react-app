@@ -29,7 +29,7 @@ export function ProjectHeader({ projectName, iconSrc, onClick }) {
 
 export default function Project({
     project,
-    handleTaskDeleted,
+    handleDeleteTask,
     handleEdit,
     handleAddTask,
     handleDeleteProject,
@@ -49,7 +49,7 @@ export default function Project({
                     <TaskList
                         tasks={project.tasks}
                         projectName={project.name}
-                        handleTaskDeleted={handleTaskDeleted}
+                        handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEdit}
                     />
                     <div className="projectBtns">

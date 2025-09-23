@@ -3,15 +3,12 @@ import Button from './Button';
 import Icon from './Icon';
 import TaskForm from './TaskForm';
 
-export function TaskList({
-    tasks,
-    projectName,
-    handleTaskDeleted,
-    handleEdit,
-}) {
+export function TaskList({ tasks, projectName, handleDeleteTask, handleEdit }) {
     if (tasks.length === 0) {
         return <p>No tasks</p>;
     }
+
+    console.log('TaskList Tasks:', tasks);
     return (
         <ul className="taskList">
             {tasks.map((task, idx) => {
@@ -20,7 +17,7 @@ export function TaskList({
                         <Task
                             task={task}
                             projectName={projectName}
-                            handleTaskDeleted={handleTaskDeleted}
+                            handleDeleteTask={handleDeleteTask}
                             handleEdit={handleEdit}
                         />
                     </li>
@@ -33,7 +30,7 @@ export function TaskList({
 export default function Task({
     task,
     projectName,
-    handleTaskDeleted,
+    handleDeleteTask,
     handleEdit,
 }) {
     const [isClicked, setIsClicked] = useState(false);
@@ -46,7 +43,7 @@ export default function Task({
 
     return (
         <>
-            <div className="task" id={task.id} onClick={handleClick}>
+            <div className="task" onClick={handleClick}>
                 <p className="taskTitle">{task.title}</p>
                 <p className="taskText">{task.text}</p>
             </div>
@@ -55,7 +52,7 @@ export default function Task({
                     task={task}
                     projectName={projectName}
                     handleClose={handleClick}
-                    handleTaskDeleted={handleTaskDeleted}
+                    handleDeleteTask={handleDeleteTask}
                     handleEdit={handleEdit}
                 />
             )}
@@ -67,7 +64,7 @@ function TaskDetails({
     task,
     projectName,
     handleClose,
-    handleTaskDeleted,
+    handleDeleteTask,
     handleEdit,
 }) {
     // const [isEdit, setIsEdit] = useState(null);
@@ -85,7 +82,7 @@ function TaskDetails({
                         <Button
                             type="Button"
                             className="detailsBtn"
-                            onClick={() => handleTaskDeleted(task.id)} // needs wrapper function because it has arguments
+                            onClick={() => handleDeleteTask(task.id)} // needs wrapper function because it has arguments
                         >
                             <Icon
                                 className="detailsSidebarIcons"

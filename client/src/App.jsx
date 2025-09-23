@@ -18,7 +18,7 @@ function App() {
     const [allTasks, setAllTasks] = useState([]);
     const [allProjects, setAllProjects] = useState([]);
     const [isAddTask, setIsAddTask] = useState(false);
-    // const [isTaskAdded, setIsTaskAdded] = useState(false);
+    // const [isUpdateProjects, setIsUpdateProjects] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
     const [editTask, setEditTask] = useState(null);
     const [status, setStatus] = useState('home');
@@ -51,9 +51,9 @@ function App() {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const data = await apiCall('/tasks');
+                const res = await fetch('http://localhost:3000/tasks');
+                const data = await res.json();
                 setAllTasks(data);
-                // setIsTaskAdded(false);
                 console.log('Tasks fetched:', data);
             } catch (error) {
                 console.error('Failed to fetch tasks', error);
@@ -62,6 +62,10 @@ function App() {
 
         fetchTasks();
     }, [apiCall]);
+
+    useEffect(() => {
+        console.log('allTasks updated:', allTasks);
+    }, [allTasks]);
 
     // fetch all projects
     useEffect(() => {
@@ -99,41 +103,101 @@ function App() {
     // onClick handlers
 
     const handleAddTask = async (newTask) => {
+        console.log('All Tasks:', allTasks);
         try {
-            const data = await apiCall(`/tasks/${users[0].id}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: newTask.title,
-                    text: newTask.text,
-                    projectId: newTask.projectId,
-                    dueDate: newTask.dueDate,
-                    priority: newTask.priority,
-                }),
-            });
+            const res = await fetch(
+                `http://localhost:3000/tasks/${users[0].id}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: newTask.title,
+                        text: newTask.text,
+                        projectId: newTask.projectId,
+                        dueDate: newTask.dueDate,
+                        priority: newTask.priority,
+                    }),
+                }
+            );
+            const createdTask = await res.json();
+            // console.log('Updated tasks:', updatedTasks);
+            // setAllTasks(updatedTasks);
+
+            // console.log(
+            //     'Add task:',
+            //     allTasks.find((task) => task.id === newTask.id)
+            // );
+
+            // try {
+            //     const data = await apiCall('/projects');
+            //     setAllProjects(data);
+            //     console.log('Projects fetched:', data);
+            // } catch (error) {
+            //     console.error('Failed to fetch projects', error);
+            // }
 
             setAllProjects((prevProjects) =>
                 prevProjects.map((project) =>
-                    project.id === newTask.projectId
-                        ? { ...project, tasks: [...project.tasks, newTask] }
+                    project.id === createdTask.projectId
+                        ? {
+                              ...project,
+                              tasks: [...project.tasks, createdTask],
+                          }
                         : project
                 )
             );
 
+            setAllTasks((prevTasks) => [...prevTasks, createdTask]);
+
             // setIsTaskAdded(true);
-            setAllTasks((prev) => [...prev, data]);
             setIsAddTask(false);
-            console.log('New task created:', data);
+            console.log('New task created:', createdTask);
         } catch (error) {
             console.error('Failed to create task...', error);
         }
     };
 
-    const handleTaskDeleted = (taskId) => {
-        console.log('Deleting task...');
-        setAllTasks((allTasks) =>
-            allTasks.filter((task) => task.id !== taskId)
+    const handleDeleteTask = async (taskId) => {
+        const prevProjects = allProjects;
+
+        // get project id
+        const projectId = allTasks.find((task) => task.id === taskId).projectId;
+        console.log('Deleting task for projectId:', projectId);
+        console.log('Deleting taskId:', taskId);
+
+        // Optimistically remove task from project
+        setAllProjects((prevProjects) =>
+            prevProjects.map((project) =>
+                project.id === projectId
+                    ? {
+                          ...project,
+                          tasks: project.tasks.filter(
+                              (task) => task.id !== taskId
+                          ),
+                      }
+                    : project
+            )
         );
+
+        // Update all tasks
+        setAllTasks((prevTasks) =>
+            prevTasks.filter((task) => task.id !== taskId)
+        );
+
+        try {
+            const deletedTask = await apiCall(`/tasks/${taskId}`, {
+                method: 'DELETE',
+            });
+            console.log('Deleting task:', deletedTask);
+
+            const updatedProjects = await apiCall('/projects');
+            console.log('Updated projects:', updatedProjects);
+            // setAllProjects(updatedProjects);
+        } catch (error) {
+            console.error('Failed to delete task', error);
+            // only re-render if the delete fails so it doesn't re-render twice
+            setAllProjects(prevProjects);
+        }
     };
 
     const handleAddTaskClick = (e) => {
@@ -223,7 +287,7 @@ function App() {
                     <Project
                         project={project}
                         tasks={allTasks}
-                        handleTaskDeleted={handleTaskDeleted}
+                        handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEdit}
                         handleDeleteProject={handleDeleteProject}
                         projectView={true}
@@ -332,8 +396,8 @@ function App() {
                                             <Project
                                                 key={project.id}
                                                 project={project}
-                                                handleTaskDeleted={
-                                                    handleTaskDeleted
+                                                handleDeleteTask={
+                                                    handleDeleteTask
                                                 }
                                                 handleEdit={handleEdit}
                                                 handleAddTask={
@@ -355,9 +419,7 @@ function App() {
                                                     getTodaysDate()
                                             )}
                                             projects={allProjects}
-                                            handleTaskDeleted={
-                                                handleTaskDeleted
-                                            }
+                                            handleTaskDeleted={handleDeleteTask}
                                             handleEdit={handleEdit}
                                         />
                                     </>
