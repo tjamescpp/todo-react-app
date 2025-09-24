@@ -24,11 +24,7 @@ export function ProjectHeader({ projectName, taskCount, iconSrc, onClick }) {
                     </Button>
                 )}
                 <p id="projectTitle">{projectName}</p>
-
-                <div id="projectTaskCount">
-                    {/* <Icon id="taskCountIcon" src="/icons/check.svg"></Icon> */}
-                    <p>{taskCount}</p>
-                </div>
+                <p id="projectTaskCount">{taskCount}</p>
             </div>
         </>
     );

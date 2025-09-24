@@ -20,7 +20,6 @@ function App() {
     const [allProjects, setAllProjects] = useState([]);
     const [projectButtons, setProjectButtons] = useState([]);
     const [isAddTask, setIsAddTask] = useState(false);
-    // const [isUpdateProjects, setIsUpdateProjects] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
     const [editTask, setEditTask] = useState(null);
     const [status, setStatus] = useState('dashboard');
@@ -53,8 +52,7 @@ function App() {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const res = await fetch('http://localhost:3000/tasks');
-                const data = await res.json();
+                const data = await apiCall('/tasks');
                 setAllTasks(data);
                 console.log('Tasks fetched:', data);
             } catch (error) {
@@ -409,7 +407,9 @@ function App() {
                             handleConfirm={handleAddTask}
                             task={isEditTask ? editTask : null}
                             projectName={
-                                isEditTask ? editTask.name : addTaskProject
+                                isEditTask
+                                    ? editTask.project.name
+                                    : addTaskProject
                             }
                         />
                     )}

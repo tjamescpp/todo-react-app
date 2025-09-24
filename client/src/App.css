@@ -369,7 +369,6 @@ textarea {
     flex-direction: column;
     background-color: var(--main-bg);
     gap: 16px;
-    /* margin: 0 auto; */
     width: 675px;
     padding: 24px;
 }
@@ -391,7 +390,6 @@ textarea {
 .projectBtns {
     display: flex;
     gap: 4px;
-    /* justify-content: space-between; */
 }
 
 .projectAddTaskBtn:hover,
@@ -406,20 +404,13 @@ textarea {
 
 #projectHeader {
     display: flex;
-    align-items: center;
+    align-items: end;
 }
 
 #projectTaskCount {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: var(--button-red-hover);
     font-size: 0.8rem;
-    width: 25px;
-    padding: 4px;
-    background-color: lightgray;
-    border-radius: 25px;
-    margin-left: 8px;
-    gap: 4px;
+    padding: 8px;
 }
 
 #taskCountIcon {
@@ -451,11 +442,10 @@ textarea {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    /* padding: 24px; */
 }
 
 #projectTitle {
-    padding: 8px;
+    padding: 6px;
     font-size: 1.2rem;
     font-weight: 500;
 }

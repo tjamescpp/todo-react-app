@@ -127,6 +127,7 @@ async function deleteTask(req, res) {
     }
 }
 
+// Fetch all tasks and format the date
 async function fetchTasks() {
     const allTasks = await prisma.task.findMany({
         // include relationships

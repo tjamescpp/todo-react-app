@@ -27,9 +27,9 @@ export default function TaskForm({
             setDueDate(task.dueDate || '');
             setPriority(task.priority || '');
             setProjectId(task.project || '');
-            setProjectValue(task.project || '');
+            setProjectValue(projectName || '');
         }
-    }, [task]);
+    }, [task, projectName]);
 
     const onSubmit = (e) => {
         e.preventDefault();
