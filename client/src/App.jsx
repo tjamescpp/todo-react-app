@@ -132,40 +132,40 @@ function App() {
                 }
             );
             const createdTask = await res.json();
-            // console.log('Updated tasks:', updatedTasks);
-            // setAllTasks(updatedTasks);
-
-            // console.log(
-            //     'Add task:',
-            //     allTasks.find((task) => task.id === newTask.id)
-            // );
-
-            // try {
-            //     const data = await apiCall('/projects');
-            //     setAllProjects(data);
-            //     console.log('Projects fetched:', data);
-            // } catch (error) {
-            //     console.error('Failed to fetch projects', error);
-            // }
-
-            setAllProjects((prevProjects) =>
-                prevProjects.map((project) =>
-                    project.id === createdTask.projectId
-                        ? {
-                              ...project,
-                              tasks: [...project.tasks, createdTask],
-                          }
-                        : project
-                )
-            );
-
+            updateProjectTasks(createdTask);
             setAllTasks((prevTasks) => [...prevTasks, createdTask]);
-
-            // setIsTaskAdded(true);
             setIsAddTask(false);
             console.log('New task created:', createdTask);
         } catch (error) {
             console.error('Failed to create task...', error);
+        }
+    };
+
+    const handleEditTask = async (task) => {
+        console.log('Editing task:', task);
+        try {
+            const res = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: task.title,
+                    text: task.text,
+                    projectId: task.projectId,
+                    dueDate: task.dueDate,
+                    priority: task.priority,
+                }),
+            });
+
+            const updatedTask = await res.json();
+            updateProjectTasks(updatedTask);
+            setAllTasks((prevTasks) =>
+                prevTasks.filter((task) => task.id !== updatedTask.id)
+            );
+            setAllTasks((prevTasks) => [...prevTasks, updatedTask]);
+            setIsEditTask(false);
+            console.log('Edited task:', updatedTask);
+        } catch (error) {
+            console.error('Failed to edit task...', error);
         }
     };
 
@@ -212,7 +212,7 @@ function App() {
         }
     };
 
-    const handleAddTaskClick = (e) => {
+    const handleAddTaskClicked = (e) => {
         console.log('Add task clicked...');
 
         const projectName = e.target.id;
@@ -229,11 +229,13 @@ function App() {
         setIsEditTask(false);
     };
 
-    const handleEdit = (taskId, handleClose) => {
+    const handleEditClicked = async (taskId, handleClose) => {
         console.log('Edit clicked...');
-        console.log('Task ID', taskId);
-        setEditTask(allTasks.find((task) => task.id === taskId));
+        const task = allTasks.find((task) => task.id === taskId);
+        console.log('Edit task:', task);
+        setEditTask(task);
         setIsEditTask(true);
+        console.log('Edit clicked status:', isEditTask);
         handleClose();
     };
 
@@ -294,6 +296,19 @@ function App() {
         setStatus('home');
     };
 
+    function updateProjectTasks(createdTask) {
+        setAllProjects((prevProjects) =>
+            prevProjects.map((project) =>
+                project.id === createdTask.projectId
+                    ? {
+                          ...project,
+                          tasks: [...project.tasks, createdTask],
+                      }
+                    : project
+            )
+        );
+    }
+
     // helper function for sidebar project buttons
     // displays project by name that equals the status
     function displayProjectByName() {
@@ -304,7 +319,7 @@ function App() {
                     <Project
                         project={project}
                         handleDeleteTask={handleDeleteTask}
-                        handleEdit={handleEdit}
+                        handleEdit={handleEditClicked}
                         handleDeleteProject={handleDeleteProject}
                         projectView={true}
                     />
@@ -333,7 +348,7 @@ function App() {
             name: 'Add task',
             id: 'addTaskBtn',
             src: '/icons/plus.svg',
-            onClick: handleAddTaskClick,
+            onClick: handleAddTaskClicked,
         },
         {
             name: 'Dashboard',
@@ -401,17 +416,20 @@ function App() {
                 </Sidebar>
                 <div id="content" ref={contentRef}>
                     {(isAddTask || isEditTask) && (
-                        <TaskForm
-                            projects={allProjects}
-                            handleCancel={handleCancel}
-                            handleConfirm={handleAddTask}
-                            task={isEditTask ? editTask : null}
-                            projectName={
-                                isEditTask
-                                    ? editTask.project.name
-                                    : addTaskProject
-                            }
-                        />
+                        <>
+                            {console.log('isEditTask:', isEditTask)}
+                            {console.log('isAddTask:', isAddTask)}
+                            {console.log('editTask:', editTask)}
+                            <TaskForm
+                                projects={allProjects}
+                                handleCancel={handleCancel}
+                                handleConfirm={
+                                    isEditTask ? handleEditTask : handleAddTask
+                                }
+                                task={isEditTask ? editTask : null}
+                                projectName={isEditTask ? null : addTaskProject}
+                            />
+                        </>
                     )}
                     <div
                         id="contentHeader"
@@ -430,8 +448,10 @@ function App() {
                                         tasks={allTasks}
                                         projects={allProjects}
                                         handleDeleteTask={handleDeleteTask}
-                                        handleEdit={handleEdit}
-                                        handleAddTaskClick={handleAddTaskClick}
+                                        handleEdit={handleEditClicked}
+                                        handleAddTaskClick={
+                                            handleAddTaskClicked
+                                        }
                                     />
 
                                     // <>
@@ -470,9 +490,9 @@ function App() {
                                                 handleDeleteTask={
                                                     handleDeleteTask
                                                 }
-                                                handleEdit={handleEdit}
+                                                handleEdit={handleEditClicked}
                                                 handleAddTask={
-                                                    handleAddTaskClick
+                                                    handleAddTaskClicked
                                                 }
                                             />
                                         </div>
@@ -496,7 +516,7 @@ function App() {
                                                     getTodaysDate()
                                             )}
                                             handleTaskDeleted={handleDeleteTask}
-                                            handleEdit={handleEdit}
+                                            handleEdit={handleEditClicked}
                                         />
                                     </>
                                 )}

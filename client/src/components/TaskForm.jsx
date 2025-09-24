@@ -22,14 +22,19 @@ export default function TaskForm({
     // when editing, load values from task into state
     useEffect(() => {
         if (task) {
+            // find project using task project id
+            const project = projects.find(
+                (project) => project.id === task.projectId
+            );
+
             setTitle(task.title || '');
             setText(task.text || '');
             setDueDate(task.dueDate || '');
             setPriority(task.priority || '');
-            setProjectId(task.project || '');
-            setProjectValue(projectName || '');
+            setProjectId(task.projectId || '');
+            setProjectValue(project.name || '');
         }
-    }, [task, projectName]);
+    }, [task, projects]);
 
     const onSubmit = (e) => {
         e.preventDefault();

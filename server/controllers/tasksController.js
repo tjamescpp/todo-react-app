@@ -59,10 +59,7 @@ async function createTask(req, res) {
         console.log('Created task:', task);
 
         // const tasks = await fetchTasks();
-        const formattedTask = {
-            ...task,
-            dueDate: dateUtils.toDateString(task.dueDate),
-        };
+        const formattedTask = formatDueDate(task);
         res.json(formattedTask);
     } catch (error) {
         console.error(error);
@@ -85,18 +82,24 @@ async function createTask(req, res) {
  * Applies a cache strategy with a TTL of 60 seconds.
  */
 async function updateTask(req, res) {
+    console.log('Updating task id:', Number(req.params.taskId));
     try {
         const task = await prisma.task.update({
             // The ID of the task to update
             where: { id: Number(req.params.taskId) },
             // The data to update
             data: {
+                title: req.body.title,
+                text: req.body.text,
+                dueDate: dateUtils.toDateObject(req.body.dueDate),
+                priority: req.body.priority,
                 projectId: Number(req.body.projectId),
             },
             cacheStrategy: { ttl: 60 }, // Cache query
         });
-
-        res.json(task);
+        console.log('Updated task:', task);
+        const formattedTask = formatDueDate(task);
+        res.json(formattedTask);
     } catch (error) {
         console.error(error);
         res.status(400).json({ error: 'Failed updating task...' });
@@ -127,6 +130,8 @@ async function deleteTask(req, res) {
     }
 }
 
+// Helper functions
+
 // Fetch all tasks and format the date
 async function fetchTasks() {
     const allTasks = await prisma.task.findMany({
@@ -140,11 +145,16 @@ async function fetchTasks() {
     });
 
     // formats the returned DateTime object dueDate into a string in YYYY-MM-DD format
-    const allTasksFormatted = allTasks.map((task) => ({
+    const allTasksFormatted = allTasks.map((task) => formatDueDate(task));
+    return allTasksFormatted;
+}
+
+// Format due date back to date string for fetched tasks
+function formatDueDate(task) {
+    return {
         ...task,
         dueDate: dateUtils.toDateString(task.dueDate),
-    }));
-    return allTasksFormatted;
+    };
 }
 
 export default {
