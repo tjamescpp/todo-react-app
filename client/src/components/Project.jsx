@@ -9,21 +9,28 @@ const icons = {
     collapse: '/icons/menu-right.svg',
 };
 
-export function ProjectHeader({ projectName, iconSrc, onClick }) {
+export function ProjectHeader({ projectName, taskCount, iconSrc, onClick }) {
     return (
-        <div className="projectHeader">
-            {iconSrc && (
-                <Button className="listExpandCollapse" onClick={onClick}>
-                    <Icon
-                        className="contentIcons"
-                        src={iconSrc}
-                        alt="Expand-Collapse"
-                        id="expandCollapseIcon"
-                    ></Icon>
-                </Button>
-            )}
-            <p className="projectTitle">{projectName}</p>
-        </div>
+        <>
+            <div id="projectHeader">
+                {iconSrc && (
+                    <Button className="listExpandCollapse" onClick={onClick}>
+                        <Icon
+                            className="contentIcons"
+                            src={iconSrc}
+                            alt="Expand-Collapse"
+                            id="expandCollapseIcon"
+                        ></Icon>
+                    </Button>
+                )}
+                <p id="projectTitle">{projectName}</p>
+
+                <div id="projectTaskCount">
+                    {/* <Icon id="taskCountIcon" src="/icons/check.svg"></Icon> */}
+                    <p>{taskCount}</p>
+                </div>
+            </div>
+        </>
     );
 }
 
@@ -34,8 +41,9 @@ export default function Project({
     handleAddTask,
     handleDeleteProject,
     projectView,
+    expand = true,
 }) {
-    const [isExpanded, setIsExpanded] = useState(true);
+    const [isExpanded, setIsExpanded] = useState(expand);
 
     const handleExpand = () => {
         setIsExpanded(!isExpanded);
@@ -54,7 +62,7 @@ export default function Project({
                     />
                     <div className="projectBtns">
                         <Button
-                            key={`${project.id}Btn`}
+                            key={`${project.name}Btn`}
                             className="projectAddTaskBtn"
                             type="button"
                             onClick={handleAddTask}
@@ -68,7 +76,7 @@ export default function Project({
                         </Button>
                         {projectView && (
                             <Button
-                                key={`${project.id}DeleteBtn`}
+                                key={`${project.name}DeleteBtn`}
                                 type="Button"
                                 className="projectDeleteBtn"
                                 onClick={() =>
@@ -89,9 +97,10 @@ export default function Project({
     };
 
     return (
-        <div className="project" id={project.id}>
+        <div className="project">
             <ProjectHeader
                 projectName={project.name}
+                taskCount={project.tasks.length}
                 iconSrc={isExpanded ? icons.expand : icons.collapse}
                 onClick={handleExpand}
             />

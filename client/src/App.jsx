@@ -12,16 +12,18 @@ import { TaskList } from './components/Task.jsx';
 import projectIcon from '/icons/pound.svg';
 import { LoadingSpinner } from './components/LoadingSpinner.jsx';
 import { useApi } from './hooks/useApi.js';
+import Dashboard from './components/Dashboard.jsx';
 
 function App() {
     const [users, setUsers] = useState([]);
     const [allTasks, setAllTasks] = useState([]);
     const [allProjects, setAllProjects] = useState([]);
+    const [projectButtons, setProjectButtons] = useState([]);
     const [isAddTask, setIsAddTask] = useState(false);
     // const [isUpdateProjects, setIsUpdateProjects] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
     const [editTask, setEditTask] = useState(null);
-    const [status, setStatus] = useState('home');
+    const [status, setStatus] = useState('dashboard');
     const [addNewProject, setAddNewProject] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
     const [addTaskProject, setAddTaskProject] = useState(null);
@@ -73,6 +75,18 @@ function App() {
             try {
                 const data = await apiCall('/projects');
                 setAllProjects(data);
+
+                // create project buttons for the sidebar
+                const buttons = data.map((project, idx) => {
+                    return {
+                        id: idx,
+                        name: project.name,
+                        src: projectIcon,
+                        onClick: handleProjectButton,
+                    };
+                });
+                setProjectButtons(buttons);
+
                 console.log('Projects fetched:', data);
             } catch (error) {
                 console.error('Failed to fetch projects', error);
@@ -202,10 +216,11 @@ function App() {
 
     const handleAddTaskClick = (e) => {
         console.log('Add task clicked...');
-        console.log(e.target.id);
-        e.target.id
-            ? setAddTaskProject(e.target.id)
-            : setAddTaskProject('Project');
+
+        const projectName = e.target.id;
+        !projectName || projectName === 'All'
+            ? setAddTaskProject('Project')
+            : setAddTaskProject(projectName);
         setIsAddTask(true);
     };
 
@@ -226,7 +241,7 @@ function App() {
 
     const handleDashboard = () => {
         console.log('Home clicked...');
-        setStatus('home');
+        setStatus('dashboard');
     };
 
     const handleToday = () => {
@@ -235,8 +250,12 @@ function App() {
     };
 
     const handleProjectButton = (e) => {
-        console.log(e.target.textContent);
-        setStatus(e.target.textContent);
+        const projectName = e.target.textContent;
+        console.log(`Clicked on ${projectName} button`);
+
+        projectName.toLowerCase() === 'my projects'
+            ? setStatus('projects')
+            : setStatus(projectName);
     };
 
     const handleNewProject = () => {
@@ -256,11 +275,11 @@ function App() {
                     id: `${newProjectName.toLowerCase()}Project`,
                 };
 
-                projectButtons.push({
-                    ...project,
-                    src: projectIcon,
-                    onClick: null,
-                });
+                // projectButtons.push({
+                //     ...project,
+                //     src: projectIcon,
+                //     onClick: null,
+                // });
 
                 setAllProjects([...allProjects, project]);
                 setNewProjectName('');
@@ -272,7 +291,7 @@ function App() {
     const handleDeleteProject = (projectName) => {
         console.log(projectName);
         setAllProjects(allProjects.filter((p) => p.name !== projectName));
-        projectButtons = projectButtons.filter((p) => p.name !== projectName);
+        // projectButtons = projectButtons.filter((p) => p.name !== projectName);
         setAllTasks(allTasks.filter((t) => t.project !== projectName));
         setStatus('home');
     };
@@ -286,7 +305,6 @@ function App() {
                 <div key={`${project.id}-key`}>
                     <Project
                         project={project}
-                        tasks={allTasks}
                         handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEdit}
                         handleDeleteProject={handleDeleteProject}
@@ -295,6 +313,16 @@ function App() {
                 </div>
             ));
     }
+
+    // const createProjectButtons = (projects) => {
+    //     return projects.map((project) => {
+    //         return {
+    //             name: project.name,
+    //             src: projectIcon,
+    //             onClick: handleProjectButton,
+    //         };
+    //     });
+    // };
 
     const sidebarButtons = [
         {
@@ -310,7 +338,7 @@ function App() {
             onClick: handleAddTaskClick,
         },
         {
-            name: 'Home',
+            name: 'Dashboard',
             id: 'homeBtn',
             src: '/icons/home-outline.svg',
             onClick: handleDashboard,
@@ -323,7 +351,7 @@ function App() {
         },
     ];
 
-    projectButtons.map((button) => (button.onClick = handleProjectButton));
+    // projectButtons.map((button) => (button.onClick = handleProjectButton));
 
     // assign handleProjectButton to each project button
     if (error) {
@@ -335,7 +363,14 @@ function App() {
                     {users.length !== 0 && <SidebarHeader user={users[0]} />}
                     <SidebarList buttons={sidebarButtons} />
                     <div id="projectsSidebar">
-                        <p id="projectListHeader">Projects</p>
+                        <Button
+                            className="sidebarBtn"
+                            type="button"
+                            id="allProjectBtn"
+                            onClick={handleProjectButton}
+                        >
+                            <p id="projectListHeader">My Projects</p>
+                        </Button>
                         <Button
                             className="sidebarBtn"
                             type="button"
@@ -390,7 +425,43 @@ function App() {
                             <LoadingSpinner />
                         ) : (
                             <ToDoList>
-                                {status === 'home' &&
+                                {status === 'dashboard' && (
+                                    <Dashboard
+                                        tasks={allTasks}
+                                        projects={allProjects}
+                                        handleDeleteTask={handleDeleteTask}
+                                        handleEdit={handleEdit}
+                                        handleAddTaskClick={handleAddTaskClick}
+                                    />
+
+                                    // <>
+                                    //     <ProjectHeader
+                                    //         projectName="Dashboard"
+                                    //         taskCount={allTasks.length}
+                                    //     />
+                                    //     <TaskList
+                                    //         tasks={allTasks}
+                                    //         handleTaskDeleted={handleDeleteTask}
+                                    //         handleEdit={handleEdit}
+                                    //     />
+                                    //     {allProjects.map((project) => (
+                                    //         <div key={`${project.id}Key`}>
+                                    //             <Project
+                                    //                 key={project.id}
+                                    //                 project={project}
+                                    //                 handleDeleteTask={
+                                    //                     handleDeleteTask
+                                    //                 }
+                                    //                 handleEdit={handleEdit}
+                                    //                 handleAddTask={
+                                    //                     handleAddTaskClick
+                                    //                 }
+                                    //             />
+                                    //         </div>
+                                    //     ))}
+                                    // </>
+                                )}
+                                {status === 'projects' &&
                                     allProjects.map((project) => (
                                         <div key={`${project.id}Key`}>
                                             <Project
@@ -410,7 +481,13 @@ function App() {
                                     <>
                                         <ProjectHeader
                                             projectName="Today"
-                                            iconSrc="/icons/check.svg"
+                                            taskCount={
+                                                allTasks.filter(
+                                                    (task) =>
+                                                        task.dueDate ===
+                                                        getTodaysDate()
+                                                ).length
+                                            }
                                         />
                                         <TaskList
                                             tasks={allTasks.filter(
@@ -418,7 +495,6 @@ function App() {
                                                     task.dueDate ===
                                                     getTodaysDate()
                                             )}
-                                            projects={allProjects}
                                             handleTaskDeleted={handleDeleteTask}
                                             handleEdit={handleEdit}
                                         />
@@ -435,26 +511,26 @@ function App() {
         );
 }
 
-let projectButtons = [
-    {
-        name: 'General',
-        id: 'generalProjectBtn',
-        src: projectIcon,
-        onClick: null,
-    },
-    {
-        name: 'Fitness',
-        id: 'fitnessProjectBtn',
-        src: projectIcon,
-        onClick: null,
-    },
-    {
-        name: 'School',
-        id: 'schoolProjectBtn',
-        src: projectIcon,
-        onClick: null,
-    },
-];
+// let projectButtons = [
+//     {
+//         name: 'General',
+//         id: 'generalProjectBtn',
+//         src: projectIcon,
+//         onClick: null,
+//     },
+//     {
+//         name: 'Fitness',
+//         id: 'fitnessProjectBtn',
+//         src: projectIcon,
+//         onClick: null,
+//     },
+//     {
+//         name: 'School',
+//         id: 'schoolProjectBtn',
+//         src: projectIcon,
+//         onClick: null,
+//     },
+// ];
 
 const getTodaysDate = () => {
     const today = new Date();
