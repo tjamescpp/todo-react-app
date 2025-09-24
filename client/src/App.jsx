@@ -262,7 +262,7 @@ function App() {
         setAddNewProject(!addNewProject);
     };
 
-    const handleNewProjectInput = (e) => {
+    const handleNewProjectInput = async (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             if (!newProjectName.trim()) return;
@@ -270,18 +270,32 @@ function App() {
             if (allProjects.some((p) => p.name === newProjectName)) {
                 alert(`${newProjectName} already exists`);
             } else {
-                const project = {
-                    name: newProjectName,
-                    id: `${newProjectName.toLowerCase()}Project`,
+                const res = await fetch(
+                    `http://localhost:3000/projects/${users[0].id}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: newProjectName,
+                            userId: users[0].id,
+                        }),
+                    }
+                );
+
+                const newProject = await res.json();
+                setAllProjects((prevProjects) => [...prevProjects, newProject]);
+
+                const newProjectButton = {
+                    id: projectButtons.length + 1,
+                    name: newProject.name,
+                    src: projectIcon,
+                    onClick: handleProjectButton,
                 };
 
-                // projectButtons.push({
-                //     ...project,
-                //     src: projectIcon,
-                //     onClick: null,
-                // });
-
-                setAllProjects([...allProjects, project]);
+                setProjectButtons((prevButtons) => [
+                    ...prevButtons,
+                    newProjectButton,
+                ]);
                 setNewProjectName('');
                 setAddNewProject(false);
             }
@@ -416,20 +430,15 @@ function App() {
                 </Sidebar>
                 <div id="content" ref={contentRef}>
                     {(isAddTask || isEditTask) && (
-                        <>
-                            {console.log('isEditTask:', isEditTask)}
-                            {console.log('isAddTask:', isAddTask)}
-                            {console.log('editTask:', editTask)}
-                            <TaskForm
-                                projects={allProjects}
-                                handleCancel={handleCancel}
-                                handleConfirm={
-                                    isEditTask ? handleEditTask : handleAddTask
-                                }
-                                task={isEditTask ? editTask : null}
-                                projectName={isEditTask ? null : addTaskProject}
-                            />
-                        </>
+                        <TaskForm
+                            projects={allProjects}
+                            handleCancel={handleCancel}
+                            handleConfirm={
+                                isEditTask ? handleEditTask : handleAddTask
+                            }
+                            task={isEditTask ? editTask : null}
+                            projectName={isEditTask ? null : addTaskProject}
+                        />
                     )}
                     <div
                         id="contentHeader"

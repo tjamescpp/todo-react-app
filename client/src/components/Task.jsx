@@ -31,7 +31,7 @@ export default function Task({ task, projects, handleDeleteTask, handleEdit }) {
 }
 
 export function TaskList({ tasks, projects, handleDeleteTask, handleEdit }) {
-    if (tasks.length === 0) {
+    if (!tasks || tasks.length === 0) {
         return <p>No tasks</p>;
     }
 

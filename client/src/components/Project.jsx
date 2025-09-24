@@ -76,7 +76,7 @@ export default function Project({
         <div className="project">
             <ProjectHeader
                 projectName={project.name}
-                taskCount={project.tasks.length}
+                taskCount={project.tasks?.length || 0}
                 iconSrc={isExpanded ? icons.expand : icons.collapse}
                 onClick={handleExpand}
             />
