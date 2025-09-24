@@ -453,33 +453,6 @@ function App() {
                                             handleAddTaskClicked
                                         }
                                     />
-
-                                    // <>
-                                    //     <ProjectHeader
-                                    //         projectName="Dashboard"
-                                    //         taskCount={allTasks.length}
-                                    //     />
-                                    //     <TaskList
-                                    //         tasks={allTasks}
-                                    //         handleTaskDeleted={handleDeleteTask}
-                                    //         handleEdit={handleEdit}
-                                    //     />
-                                    //     {allProjects.map((project) => (
-                                    //         <div key={`${project.id}Key`}>
-                                    //             <Project
-                                    //                 key={project.id}
-                                    //                 project={project}
-                                    //                 handleDeleteTask={
-                                    //                     handleDeleteTask
-                                    //                 }
-                                    //                 handleEdit={handleEdit}
-                                    //                 handleAddTask={
-                                    //                     handleAddTaskClick
-                                    //                 }
-                                    //             />
-                                    //         </div>
-                                    //     ))}
-                                    // </>
                                 )}
                                 {status === 'projects' &&
                                     allProjects.map((project) => (
@@ -487,6 +460,7 @@ function App() {
                                             <Project
                                                 key={project.id}
                                                 project={project}
+                                                allProjects={allProjects}
                                                 handleDeleteTask={
                                                     handleDeleteTask
                                                 }

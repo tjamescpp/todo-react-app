@@ -9,29 +9,9 @@ const icons = {
     collapse: '/icons/menu-right.svg',
 };
 
-export function ProjectHeader({ projectName, taskCount, iconSrc, onClick }) {
-    return (
-        <>
-            <div id="projectHeader">
-                {iconSrc && (
-                    <Button className="listExpandCollapse" onClick={onClick}>
-                        <Icon
-                            className="contentIcons"
-                            src={iconSrc}
-                            alt="Expand-Collapse"
-                            id="expandCollapseIcon"
-                        ></Icon>
-                    </Button>
-                )}
-                <p id="projectTitle">{projectName}</p>
-                <p id="projectTaskCount">{taskCount}</p>
-            </div>
-        </>
-    );
-}
-
 export default function Project({
     project,
+    allProjects,
     handleDeleteTask,
     handleEdit,
     handleAddTask,
@@ -52,7 +32,7 @@ export default function Project({
                 <>
                     <TaskList
                         tasks={project.tasks}
-                        projectName={project.name}
+                        projects={allProjects}
                         handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEdit}
                     />
@@ -102,5 +82,26 @@ export default function Project({
             />
             {showTaskList()}
         </div>
+    );
+}
+
+export function ProjectHeader({ projectName, taskCount, iconSrc, onClick }) {
+    return (
+        <>
+            <div id="projectHeader">
+                {iconSrc && (
+                    <Button className="listExpandCollapse" onClick={onClick}>
+                        <Icon
+                            className="contentIcons"
+                            src={iconSrc}
+                            alt="Expand-Collapse"
+                            id="expandCollapseIcon"
+                        ></Icon>
+                    </Button>
+                )}
+                <p id="projectTitle">{projectName}</p>
+                <p id="projectTaskCount">{taskCount}</p>
+            </div>
+        </>
     );
 }

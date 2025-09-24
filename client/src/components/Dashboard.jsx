@@ -3,9 +3,9 @@ import { TaskList } from './Task';
 
 export default function Dashboard({
     tasks,
+    projects,
     handleDeleteTask,
     handleEdit,
-    projects,
     handleAddTaskClick,
 }) {
     const newProject = {
@@ -24,6 +24,7 @@ export default function Dashboard({
             /> */}
             <Project
                 project={newProject}
+                allProjects={projects}
                 handleDeleteTask={handleDeleteTask}
                 handleEdit={handleEdit}
                 handleAddTask={handleAddTaskClick}
@@ -32,6 +33,7 @@ export default function Dashboard({
                 <div key={`${project.id}Key`}>
                     <Project
                         project={project}
+                        allProjects={projects}
                         handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEdit}
                         handleAddTask={handleAddTaskClick}

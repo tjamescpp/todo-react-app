@@ -1,38 +1,8 @@
 import { useState } from 'react';
 import Button from './Button';
 import Icon from './Icon';
-import TaskForm from './TaskForm';
 
-export function TaskList({ tasks, projectName, handleDeleteTask, handleEdit }) {
-    if (tasks.length === 0) {
-        return <p>No tasks</p>;
-    }
-
-    console.log('TaskList Tasks:', tasks);
-    return (
-        <ul className="taskList">
-            {tasks.map((task, idx) => {
-                return (
-                    <li key={task.id ?? idx}>
-                        <Task
-                            task={task}
-                            projectName={projectName}
-                            handleDeleteTask={handleDeleteTask}
-                            handleEdit={handleEdit}
-                        />
-                    </li>
-                );
-            })}
-        </ul>
-    );
-}
-
-export default function Task({
-    task,
-    projectName,
-    handleDeleteTask,
-    handleEdit,
-}) {
+export default function Task({ task, projects, handleDeleteTask, handleEdit }) {
     const [isClicked, setIsClicked] = useState(false);
 
     const handleClick = () => {
@@ -50,7 +20,7 @@ export default function Task({
             {isClicked && (
                 <TaskDetails
                     task={task}
-                    projectName={projectName}
+                    projects={projects}
                     handleClose={handleClick}
                     handleDeleteTask={handleDeleteTask}
                     handleEdit={handleEdit}
@@ -60,15 +30,39 @@ export default function Task({
     );
 }
 
+export function TaskList({ tasks, projects, handleDeleteTask, handleEdit }) {
+    if (tasks.length === 0) {
+        return <p>No tasks</p>;
+    }
+
+    console.log('TaskList Tasks:', tasks);
+    return (
+        <ul className="taskList">
+            {tasks.map((task, idx) => {
+                return (
+                    <li key={task.id ?? idx}>
+                        <Task
+                            task={task}
+                            projects={projects}
+                            handleDeleteTask={handleDeleteTask}
+                            handleEdit={handleEdit}
+                        />
+                    </li>
+                );
+            })}
+        </ul>
+    );
+}
+
 function TaskDetails({
     task,
-    projectName,
+    projects,
     handleClose,
     handleDeleteTask,
     handleEdit,
 }) {
-    // const [isEdit, setIsEdit] = useState(null);
-    console.log('Task details project: ', projectName);
+    const project = projects.find((project) => project.id === task.projectId);
+    console.log('Task project: ', project);
 
     return (
         <div className="overlay">
@@ -112,7 +106,7 @@ function TaskDetails({
                     </div>
                     <SidebarDetail
                         name="Project"
-                        taskDetail={projectName}
+                        taskDetail={project.name}
                         iconSrc="/icons/pound.svg"
                     />
                     <SidebarDetail
