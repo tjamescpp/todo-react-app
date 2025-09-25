@@ -49,12 +49,11 @@ async function createTask(req, res) {
             data: {
                 title: req.body.title,
                 text: req.body.text,
-                projectId: Number(req.body.projectId),
                 dueDate: date,
                 priority: req.body.priority,
                 userId: Number(req.params.userId),
+                projectId: Number(req.body.projectId),
             },
-            cacheStrategy: { ttl: 60 }, // cache query
         });
         console.log('Created task:', task);
 
@@ -93,9 +92,8 @@ async function updateTask(req, res) {
                 text: req.body.text,
                 dueDate: dateUtils.toDateObject(req.body.dueDate),
                 priority: req.body.priority,
-                projectId: Number(req.body.projectId),
+                projectId: req.body.projectId,
             },
-            cacheStrategy: { ttl: 60 }, // Cache query
         });
         console.log('Updated task:', task);
         const formattedTask = formatDueDate(task);
@@ -120,7 +118,6 @@ async function deleteTask(req, res) {
         const task = await prisma.task.delete({
             // Id of the task to be deleted
             where: { id: Number(req.params.taskId) },
-            cacheStrategy: { ttl: 60 }, // Cache query
         });
 
         res.json(task);
@@ -140,8 +137,6 @@ async function fetchTasks() {
             user: true,
             project: true,
         },
-        // prisma caching for accelerate
-        cacheStrategy: { ttl: 60 },
     });
 
     // formats the returned DateTime object dueDate into a string in YYYY-MM-DD format

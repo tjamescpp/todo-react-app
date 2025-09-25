@@ -71,7 +71,8 @@ function App() {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const data = await apiCall('/projects');
+                const res = await fetch('http://localhost:3000/projects');
+                const data = await res.json();
                 setAllProjects(data);
 
                 // create project buttons for the sidebar
@@ -302,12 +303,45 @@ function App() {
         }
     };
 
-    const handleDeleteProject = (projectName) => {
-        console.log(projectName);
-        setAllProjects(allProjects.filter((p) => p.name !== projectName));
-        // projectButtons = projectButtons.filter((p) => p.name !== projectName);
-        setAllTasks(allTasks.filter((t) => t.project !== projectName));
-        setStatus('home');
+    const handleDeleteProject = async (projectName) => {
+        // get the project by name
+        const project = allProjects.find(
+            (project) => project.name === projectName
+        );
+
+        // update project project tasks to default projectId
+        const updatedTasks = allTasks.map((task) => {
+            if (task.projectId === project.id) {
+                task.projectId = 1;
+            }
+        });
+        console.log('Updated tasks:', updatedTasks);
+        // setAllTasks((prevTasks) => [...prevTasks, updatedTasks]);
+
+        console.log('Delete project id:', project.id);
+        const res = await fetch(
+            `http://localhost:3000/projects/${project.id}`,
+            {
+                method: 'DELETE',
+            }
+        );
+
+        const deletedProject = await res.json();
+        console.log('Deleted project:', deletedProject);
+
+        setAllProjects(
+            allProjects.filter((project) => project.name !== projectName)
+        );
+        setProjectButtons(
+            projectButtons.filter((button) => button.name !== projectName)
+        );
+
+        // const updatedTasks = project.tasks.map((task) => {
+        //     task.projectId = 1;
+        // });
+
+        // setAllTasks((prevTasks) => [...prevTasks, updatedTasks]);
+        setStatus('dashboard');
     };
 
     function updateProjectTasks(createdTask) {
@@ -316,7 +350,7 @@ function App() {
                 project.id === createdTask.projectId
                     ? {
                           ...project,
-                          tasks: [...project.tasks, createdTask],
+                          tasks: [project.tasks ?? createdTask],
                       }
                     : project
             )
@@ -335,6 +369,7 @@ function App() {
                         handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEditClicked}
                         handleDeleteProject={handleDeleteProject}
+                        handleAddTask={handleAddTaskClicked}
                         projectView={true}
                     />
                 </div>
@@ -414,7 +449,7 @@ function App() {
                         {addNewProject && (
                             <input
                                 type="text"
-                                placeholder="Name"
+                                placeholder="Name:"
                                 value={newProjectName}
                                 onChange={(e) =>
                                     setNewProjectName(e.target.value)

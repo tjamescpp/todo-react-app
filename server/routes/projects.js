@@ -5,5 +5,6 @@ const router = Router();
 
 router.get('/', projectsController.getAllProjects);
 router.post('/:userId', projectsController.createProject);
+router.delete('/:projectId', projectsController.deleteProject);
 
 export default router;
