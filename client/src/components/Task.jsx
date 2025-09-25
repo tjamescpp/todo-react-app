@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Button from './Button';
 import Icon from './Icon';
+import CheckButton from './CheckButton';
 
 export default function Task({ task, projects, handleDeleteTask, handleEdit }) {
     const [isClicked, setIsClicked] = useState(false);
@@ -40,7 +41,12 @@ export function TaskList({ tasks, projects, handleDeleteTask, handleEdit }) {
         <ul className="taskList">
             {tasks.map((task, idx) => {
                 return (
+                    // <div>
                     <li key={task.id ?? idx}>
+                        <CheckButton
+                            handleDeleteTask={handleDeleteTask}
+                            task={task}
+                        ></CheckButton>
                         <Task
                             task={task}
                             projects={projects}
@@ -48,6 +54,7 @@ export function TaskList({ tasks, projects, handleDeleteTask, handleEdit }) {
                             handleEdit={handleEdit}
                         />
                     </li>
+                    // </div>
                 );
             })}
         </ul>

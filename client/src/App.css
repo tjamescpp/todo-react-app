@@ -382,14 +382,15 @@ textarea {
     cursor: pointer;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 4px;
     border-radius: 5px;
-    width: 125px;
+    width: 100px;
 }
 
 .projectBtns {
     display: flex;
     gap: 4px;
+    margin-left: 12px;
 }
 
 .projectAddTaskBtn:hover,
@@ -409,7 +410,7 @@ textarea {
 
 #projectTaskCount {
     color: var(--button-red-hover);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     padding: 8px;
 }
 
@@ -432,6 +433,7 @@ textarea {
     border-radius: 15px;
     padding: 8px;
     gap: 12px;
+    width: 600px;
 }
 
 .project {
@@ -452,6 +454,43 @@ textarea {
     list-style: none;
     gap: 24px;
     padding: 12px;
+}
+
+.taskList > li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+#taskIcon {
+    width: 20px;
+    height: 20px;
+    background-color: var(--main-bg);
+    cursor: pointer;
+    /* border: 1px solid; */
+    /* stroke: red; */
+    /* padding: 8px; */
+}
+
+#taskIcon:hover {
+    /* background-color: white; */
+    /* border: 1px solid; */
+    fill: var(--button-red-hover);
+}
+
+#taskIconBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: var(--main-bg);
+    width: 25px;
+    height: 25px;
+}
+
+#taskIconBtn:hover {
+    /* background-color: var(--button-red); */
 }
 
 .taskText {
