@@ -21,14 +21,14 @@ export default function TaskForm({
 
     // set projectId on mount
     useEffect(() => {
-        if (projectValue !== 'Project') {
+        if (!task && projectValue !== 'Project') {
             const id = projects.find(
                 (project) => project.name === projectValue
             ).id;
             console.log('Task form projectId:', id);
             setProjectId(id);
         }
-    }, [projects, projectValue]);
+    }, [task, projects, projectValue]);
 
     // when editing, load values from task into state
     useEffect(() => {

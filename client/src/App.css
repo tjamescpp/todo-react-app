@@ -434,10 +434,6 @@ textarea {
     gap: 12px;
 }
 
-.taskList {
-    padding: 12px;
-}
-
 .project {
     display: flex;
     flex-direction: column;
@@ -454,7 +450,8 @@ textarea {
     display: flex;
     flex-direction: column;
     list-style: none;
-    gap: 16px;
+    gap: 24px;
+    padding: 12px;
 }
 
 .taskText {
