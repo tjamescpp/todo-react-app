@@ -19,6 +19,17 @@ export default function TaskForm({
     const [priority, setPriority] = useState('');
     const [projectId, setProjectId] = useState('');
 
+    // set projectId on mount
+    useEffect(() => {
+        if (projectValue !== 'Project') {
+            const id = projects.find(
+                (project) => project.name === projectValue
+            ).id;
+            console.log('Task form projectId:', id);
+            setProjectId(id);
+        }
+    }, [projects, projectValue]);
+
     // when editing, load values from task into state
     useEffect(() => {
         if (task) {

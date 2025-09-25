@@ -165,14 +165,27 @@ function App() {
                     }),
                 }
             );
-            const createdTask = await res.json();
-            updateProjectTasks(createdTask);
-            setAllTasks((prevTasks) => [...prevTasks, createdTask]);
-            setIsAddTask(false);
-            console.log('New task created:', createdTask);
+
+            if (res.ok) {
+                const createdTask = await res.json();
+                updateProjectTasks(createdTask);
+                setAllTasks((prevTasks) => [...prevTasks, createdTask]);
+                setIsAddTask(false);
+                console.log('New task created:', createdTask);
+            }
         } catch (error) {
             console.error('Failed to create task...', error);
         }
+    };
+
+    const handleEditClicked = async (taskId, handleClose) => {
+        console.log('Edit clicked...');
+        const task = allTasks.find((task) => task.id === taskId);
+        console.log('Edit task:', task);
+        setEditTask(task);
+        setIsEditTask(true);
+        console.log('Edit clicked status:', isEditTask);
+        handleClose();
     };
 
     const handleEditTask = async (task) => {
@@ -261,16 +274,6 @@ function App() {
         console.log('Cancel clicked...');
         setIsAddTask(false);
         setIsEditTask(false);
-    };
-
-    const handleEditClicked = async (taskId, handleClose) => {
-        console.log('Edit clicked...');
-        const task = allTasks.find((task) => task.id === taskId);
-        console.log('Edit task:', task);
-        setEditTask(task);
-        setIsEditTask(true);
-        console.log('Edit clicked status:', isEditTask);
-        handleClose();
     };
 
     const handleDashboard = () => {
@@ -377,15 +380,15 @@ function App() {
         setStatus('dashboard');
     };
 
-    function updateProjectTasks(createdTask) {
+    function updateProjectTasks(task) {
         setAllProjects((prevProjects) =>
             prevProjects.map((project) =>
-                project.id === createdTask.projectId
+                project.id === task.projectId && project.tasks
                     ? {
                           ...project,
-                          tasks: [project.tasks ?? createdTask],
+                          tasks: [...project.tasks, task],
                       }
-                    : project
+                    : { ...project, tasks: [task] }
             )
         );
     }
@@ -399,6 +402,7 @@ function App() {
                 <div key={`${project.id}-key`}>
                     <Project
                         project={project}
+                        allProjects={allProjects}
                         handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEditClicked}
                         handleDeleteProject={handleDeleteProject}
@@ -493,7 +497,7 @@ function App() {
                         {addNewProject && (
                             <input
                                 type="text"
-                                placeholder="Name:"
+                                placeholder="Name"
                                 value={newProjectName}
                                 onChange={(e) =>
                                     setNewProjectName(e.target.value)
@@ -509,15 +513,18 @@ function App() {
                 </Sidebar>
                 <div id="content" ref={contentRef}>
                     {(isAddTask || isEditTask) && (
-                        <TaskForm
-                            projects={allProjects}
-                            handleCancel={handleCancel}
-                            handleConfirm={
-                                isEditTask ? handleEditTask : handleAddTask
-                            }
-                            task={isEditTask ? editTask : null}
-                            projectName={isEditTask ? null : addTaskProject}
-                        />
+                        <>
+                            {console.log('Task form project:', addTaskProject)}
+                            <TaskForm
+                                projects={allProjects}
+                                handleCancel={handleCancel}
+                                handleConfirm={
+                                    isEditTask ? handleEditTask : handleAddTask
+                                }
+                                task={isEditTask ? editTask : null}
+                                projectName={isEditTask ? null : addTaskProject}
+                            />
+                        </>
                     )}
                     <div
                         id="contentHeader"
@@ -591,6 +598,7 @@ function App() {
                                                     task.dueDate ===
                                                     getTodaysDate()
                                             )}
+                                            projects={allProjects}
                                             handleTaskDeleted={handleDeleteTask}
                                             handleEdit={handleEditClicked}
                                         />

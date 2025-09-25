@@ -92,7 +92,7 @@ async function updateTask(req, res) {
                 text: req.body.text,
                 dueDate: dateUtils.toDateObject(req.body.dueDate),
                 priority: req.body.priority,
-                projectId: req.body.projectId,
+                projectId: Number(req.body.projectId),
             },
         });
         console.log('Updated task:', task);
