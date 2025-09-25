@@ -27,6 +27,9 @@ function App() {
     const [newProjectName, setNewProjectName] = useState('');
     const [addTaskProject, setAddTaskProject] = useState(null);
     const [scrolled, setScrolled] = useState(false);
+    const [isSearch, setIsSearch] = useState(false);
+    const [searchFor, setSearchFor] = useState(null);
+    const [searchTaskResults, setSearchTaskResults] = useState([]);
     // const [error, setError] = useState(null);
     // const [loading, setLoading] = useState(true);
     const { apiCall, loading, error } = useApi();
@@ -113,7 +116,37 @@ function App() {
         };
     }, []);
 
+    // useEffect(() => {
+    //     if (status !== 'search') {
+    //         setIsSearch(false);
+    //     }
+    // }, [status]);
+
     // onClick handlers
+
+    const handleSearchClicked = () => {
+        console.log('Search clicked:');
+        setIsSearch(!isSearch);
+
+        if (status === 'search') {
+            setStatus('dashboard');
+        } else {
+            setStatus('search');
+        }
+    };
+
+    const handleSearchInput = () => {
+        const results = allTasks.filter(
+            (task) =>
+                task.title.toLowerCase().includes(searchFor) ||
+                task.text.toLowerCase().includes(searchFor)
+        );
+
+        setSearchTaskResults(results);
+        // if (e.onKeyDown === 'Enter') {
+        // }
+        // setIsSearch(!isSearch);
+    };
 
     const handleAddTask = async (newTask) => {
         console.log('All Tasks:', allTasks);
@@ -391,7 +424,7 @@ function App() {
             name: 'Search',
             id: 'searchBtn',
             src: '/icons/magnify.svg',
-            onClick: null,
+            onClick: handleSearchClicked,
         },
         {
             name: 'Add task',
@@ -423,12 +456,23 @@ function App() {
             <div id="container">
                 <Sidebar>
                     {users.length !== 0 && <SidebarHeader user={users[0]} />}
+                    {status === 'search' && (
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            value={searchFor}
+                            onChange={(e) =>
+                                setSearchFor(e.target.value.toLowerCase())
+                            }
+                            onKeyDown={handleSearchInput}
+                        />
+                    )}
                     <SidebarList buttons={sidebarButtons} />
                     <div id="projectsSidebar">
                         <Button
                             className="sidebarBtn"
                             type="button"
-                            id="allProjectBtn"
+                            id="myProjectsBtn"
                             onClick={handleProjectButton}
                         >
                             <p id="projectListHeader">My Projects</p>
@@ -487,6 +531,20 @@ function App() {
                             <LoadingSpinner />
                         ) : (
                             <ToDoList>
+                                {status === 'search' && (
+                                    <>
+                                        <ProjectHeader
+                                            projectName="Results"
+                                            taskCount={searchTaskResults.length}
+                                        />
+                                        <TaskList
+                                            tasks={searchTaskResults}
+                                            projects={allProjects}
+                                            handleTaskDeleted={handleDeleteTask}
+                                            handleEdit={handleEditClicked}
+                                        />
+                                    </>
+                                )}
                                 {status === 'dashboard' && (
                                     <Dashboard
                                         tasks={allTasks}
