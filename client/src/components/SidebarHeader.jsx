@@ -10,7 +10,7 @@ export default function SidebarHeader({ user }) {
                 alt={'profilePic'}
                 id={'profilePic'}
             />
-            <p>{user?.firstName || 'Loading...'}</p>
+            <p>{user?.firstName}</p>
         </div>
     );
 }

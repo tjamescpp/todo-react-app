@@ -297,6 +297,7 @@ textarea {
 .detailsBtn {
     padding: 4px;
     cursor: pointer;
+    background-color: var(--button-gray);
 }
 
 .detailsBtn:hover {
@@ -390,12 +391,12 @@ textarea {
 .projectBtns {
     display: flex;
     gap: 4px;
-    margin-left: 12px;
+    margin-left: 8px;
 }
 
 .projectAddTaskBtn:hover,
 .projectDeleteBtn:hover {
-    background-color: lightgray;
+    background-color: var(--button-gray);
 }
 
 .contentIcons {

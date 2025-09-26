@@ -1,15 +1,16 @@
 // components/LoadingSpinner.js
-export const LoadingSpinner = ({ size = 40, color = 'black' }) => {
+export const LoadingSpinner = ({ size = 30, color = 'black' }) => {
     const spinnerStyle = {
         width: `${size}px`,
         height: `${size}px`,
-        border: `4px solid #f3f3f3`,
-        borderTop: `4px solid ${color}`,
+        border: `2px solid #f3f3f3`,
+        borderTop: `2px solid ${color}`,
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
     };
 
     return (
+        // <div class="overlay">
         <div
             style={{
                 display: 'flex',
@@ -30,5 +31,6 @@ export const LoadingSpinner = ({ size = 40, color = 'black' }) => {
                 }
             `}</style>
         </div>
+        // </div>
     );
 };
