@@ -47,6 +47,11 @@ export function TaskList({ tasks, projects, handleDeleteTask, handleEdit }) {
                             handleDeleteTask={handleDeleteTask}
                             task={task}
                         ></CheckButton>
+                        {/* <button
+                            onClick={() => handleDeleteTask(task.id)}
+                            id="taskIconBtn"
+                            aria-label="Delete"
+                        ></button> */}
                         <Task
                             task={task}
                             projects={projects}
