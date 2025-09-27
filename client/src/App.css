@@ -343,7 +343,7 @@ textarea {
     top: 0;
     font-size: 1.3rem;
     font-weight: 400;
-    padding: 12px;
+    padding: 20px;
     background-color: var(--main-bg);
 }
 
@@ -432,9 +432,9 @@ textarea {
     background-color: white;
     cursor: pointer;
     border-radius: 15px;
-    padding: 8px;
+    padding: 12px;
     gap: 12px;
-    width: 600px;
+    width: 575px;
 }
 
 .project {
@@ -446,7 +446,7 @@ textarea {
 #projectTitle {
     padding: 6px;
     font-size: 1.2rem;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .taskList {
@@ -459,30 +459,31 @@ textarea {
 
 .taskList > li {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
-#taskIcon {
-    width: 12px;
-    height: 12px;
+#taskCheck {
+    width: 15px;
+    height: 15px;
     background-color: var(--main-bg);
+    border-radius: 15px;
     cursor: pointer;
     fill: var(--main-bg);
 }
 
-#taskIcon:hover {
-    fill: black;
+#taskCheck:hover {
+    fill: darkgray;
 }
 
-#taskIconBtn {
+#taskCheckBtn {
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     background-color: var(--main-bg);
-    border: 1px solid;
+    border: 1px solid darkgray;
     border-radius: 15px;
     width: 20px;
     height: 20px;
@@ -490,6 +491,10 @@ textarea {
 
 .taskText {
     font-size: 0.8rem;
+}
+
+.taskTitle {
+    font-weight: 600;
 }
 
 /* END OF CONTENT  */

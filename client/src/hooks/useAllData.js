@@ -26,6 +26,8 @@ export const useAllData = () => {
             setUsers(usersResult);
             setTasks(tasksResult);
             setProjects(projectsResult);
+
+            return true;
         };
 
         dataFetch();

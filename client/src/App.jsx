@@ -60,64 +60,6 @@ function App() {
         }
     }, [users, tasks, projects]);
 
-    // fetch all users
-    // useEffect(() => {
-    //     const fetchUsers = async () => {
-    //         try {
-    //             const data = await apiCall('/users');
-    //             setUsers(data);
-    //             console.log('Users fetched:', data);
-    //         } catch (error) {
-    //             console.error('Failed to fetch users', error);
-    //         }
-    //     };
-
-    //     fetchUsers();
-    // }, [apiCall]);
-
-    // // fetch all tasks
-    // useEffect(() => {
-    //     const fetchTasks = async () => {
-    //         try {
-    //             const data = await apiCall('/tasks');
-    //             setAllTasks(data);
-    //             console.log('Tasks fetched:', data);
-    //         } catch (error) {
-    //             console.error('Failed to fetch tasks', error);
-    //         }
-    //     };
-
-    //     fetchTasks();
-    // }, [apiCall]);
-
-    // // fetch all projects
-    // useEffect(() => {
-    //     const fetchProjects = async () => {
-    //         try {
-    //             const res = await fetch('http://localhost:3000/projects');
-    //             const data = await res.json();
-    //             setAllProjects(data);
-
-    //             // create project buttons for the sidebar
-    //             const buttons = data.map((project, idx) => {
-    //                 return {
-    //                     id: idx,
-    //                     name: project.name,
-    //                     src: projectIcon,
-    //                     onClick: handleProjectButton,
-    //                 };
-    //             });
-    //             setProjectButtons(buttons);
-
-    //             console.log('Projects fetched:', data);
-    //         } catch (error) {
-    //             console.error('Failed to fetch projects', error);
-    //         }
-    //     };
-
-    //     fetchProjects();
-    // }, [apiCall]);
-
     useEffect(() => {
         console.log('allTasks updated:', allTasks);
     }, [allTasks]);

@@ -2,11 +2,11 @@ export default function CheckButton({ handleDeleteTask, task }) {
     return (
         <button
             onClick={() => handleDeleteTask(task.id)}
-            id="taskIconBtn"
+            id="taskCheckBtn"
             aria-label="Delete"
         >
             <svg
-                id="taskIcon"
+                id="taskCheck"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
             >
