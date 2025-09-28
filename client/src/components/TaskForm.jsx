@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Button from './Button';
 import Icon from './Icon';
-// import { projects } from '../data';
 import { useEffect } from 'react';
 
 export default function TaskForm({
@@ -13,11 +12,13 @@ export default function TaskForm({
 }) {
     const [isDropdown, setIsDropdown] = useState(false);
     const [projectValue, setProjectValue] = useState(projectName);
-    const [title, setTitle] = useState('');
-    const [text, setText] = useState('');
-    const [dueDate, setDueDate] = useState('');
-    const [priority, setPriority] = useState('');
-    const [projectId, setProjectId] = useState('');
+    const [form, setForm] = useState({
+        title: '',
+        text: '',
+        dueDate: '',
+        priority: '',
+        projectId: '',
+    });
 
     // set projectId on mount
     useEffect(() => {
@@ -26,41 +27,45 @@ export default function TaskForm({
                 (project) => project.name === projectValue
             ).id;
             console.log('Task form projectId:', id);
-            setProjectId(id);
+            setForm((prevForm) => ({ ...prevForm, projectId: id }));
         }
     }, [task, projects, projectValue]);
 
     // when editing, load values from task into state
     useEffect(() => {
         if (task) {
-            // find project using task project id
+            console.log('Editing task:', task);
+
+            // find project using the task's projectId
             const project = projects.find(
                 (project) => project.id === task.projectId
             );
 
-            setTitle(task.title || '');
-            setText(task.text || '');
-            setDueDate(task.dueDate || '');
-            setPriority(task.priority || '');
-            setProjectId(task.projectId || '');
             setProjectValue(project.name || '');
+
+            setForm((prevForm) => ({
+                ...prevForm,
+                title: task?.title ?? '',
+                text: task?.text ?? '',
+                dueDate: task?.dueDate ?? '',
+                priority: task?.priority ?? '',
+                projectId: task?.projectId ?? '',
+            }));
         }
     }, [task, projects]);
 
     const onSubmit = (e) => {
         e.preventDefault();
+
+        if (e.target.querySelector('#taskTitleInput').validity.rangeOverflow) {
+            alert('Title must be less than max characters');
+        }
+
         handleConfirm({
             ...task, // keep existing id if editing
-            title,
-            text,
-            dueDate,
-            priority,
-            projectId,
+            ...form, // copy form object
         });
     };
-
-    console.log('Editing task:', task);
-    console.log('Project:', projectValue);
 
     const handleProjectDropdown = () => {
         console.log('Project dropdown clicked...');
@@ -68,8 +73,9 @@ export default function TaskForm({
     };
 
     const handleProjectValue = (value) => {
+        const id = projects.find((project) => project.name === value).id;
+        setForm({ ...form, projectId: id });
         setProjectValue(value);
-        setProjectId(projects.find((project) => project.name === value).id);
         setIsDropdown(false);
     };
 
@@ -81,15 +87,20 @@ export default function TaskForm({
                         <input
                             id="taskTitleInput"
                             type="text"
+                            maxLength={30}
                             placeholder="Take the dog for a walk"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            value={form.title ?? ''}
+                            onChange={(e) =>
+                                setForm({ ...form, title: e.target.value })
+                            }
                         />
                         <textarea
                             id="taskDescriptionText"
                             placeholder="Description"
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
+                            value={form.text ?? ''}
+                            onChange={(e) =>
+                                setForm({ ...form, text: e.target.value })
+                            }
                         />
                         <div id="projectDatePriority">
                             <div>
@@ -122,8 +133,13 @@ export default function TaskForm({
                                     type="date"
                                     name="taskDateInput"
                                     id="taskDateInput"
-                                    value={dueDate}
-                                    onChange={(e) => setDueDate(e.target.value)}
+                                    value={form.dueDate ?? ''}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            dueDate: e.target.value,
+                                        })
+                                    }
                                 />
                             </div>
                             <div id="priorityRadios">
@@ -135,9 +151,12 @@ export default function TaskForm({
                                         name="priority"
                                         value="p1"
                                         className="radios"
-                                        checked={priority === 'p1'}
+                                        checked={form.priority === 'p1'}
                                         onChange={(e) =>
-                                            setPriority(e.target.value)
+                                            setForm({
+                                                ...form,
+                                                priority: e.target.value,
+                                            })
                                         }
                                     />
                                     <label htmlFor="p1">P1</label>
@@ -147,9 +166,12 @@ export default function TaskForm({
                                         name="priority"
                                         value="p2"
                                         className="radios"
-                                        checked={priority === 'p2'}
+                                        checked={form.priority === 'p2'}
                                         onChange={(e) =>
-                                            setPriority(e.target.value)
+                                            setForm({
+                                                ...form,
+                                                priority: e.target.value,
+                                            })
                                         }
                                     />
                                     <label htmlFor="p2">P2</label>
@@ -159,9 +181,12 @@ export default function TaskForm({
                                         name="priority"
                                         value="p3"
                                         className="radios"
-                                        checked={priority === 'p3'}
+                                        checked={form.priority === 'p3'}
                                         onChange={(e) =>
-                                            setPriority(e.target.value)
+                                            setForm({
+                                                ...form,
+                                                priority: e.target.value,
+                                            })
                                         }
                                     />
                                     <label htmlFor="p3">P3</label>

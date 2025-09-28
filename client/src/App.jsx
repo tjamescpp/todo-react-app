@@ -15,6 +15,7 @@ import Dashboard from './components/Dashboard.jsx';
 import { useAllData } from './hooks/useAllData.js';
 
 function App() {
+    const { users, tasks, projects } = useAllData();
     const [user, setUser] = useState([]);
     const [allTasks, setAllTasks] = useState([]);
     const [allProjects, setAllProjects] = useState([]);
@@ -31,7 +32,6 @@ function App() {
     const [searchFor, setSearchFor] = useState(null);
     const [searchTaskResults, setSearchTaskResults] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { users, tasks, projects } = useAllData();
 
     const contentRef = useRef(null);
 
@@ -116,6 +116,7 @@ function App() {
 
     const handleAddTask = async (newTask) => {
         console.log('All Tasks:', allTasks);
+        console.log('Adding task:', newTask);
         try {
             const res = await fetch(
                 `http://localhost:3000/tasks/${users[0].id}`,
@@ -373,16 +374,6 @@ function App() {
             ));
     }
 
-    // const createProjectButtons = (projects) => {
-    //     return projects.map((project) => {
-    //         return {
-    //             name: project.name,
-    //             src: projectIcon,
-    //             onClick: handleProjectButton,
-    //         };
-    //     });
-    // };
-
     const sidebarButtons = [
         {
             name: 'Search',
@@ -410,8 +401,6 @@ function App() {
         },
     ];
 
-    // projectButtons.map((button) => (button.onClick = handleProjectButton));
-
     return (
         <div id="container">
             <Sidebar>
@@ -422,9 +411,10 @@ function App() {
                 )}
                 {status === 'search' && (
                     <input
+                        id="searchInput"
                         type="text"
                         placeholder="Search"
-                        value={searchFor}
+                        value={searchFor ?? ''}
                         onChange={(e) =>
                             setSearchFor(e.target.value.toLowerCase())
                         }
@@ -456,6 +446,7 @@ function App() {
                     </Button>
                     {addNewProject && (
                         <input
+                            id="newProjectInput"
                             type="text"
                             placeholder="Name"
                             value={newProjectName}
@@ -563,27 +554,6 @@ function App() {
     );
 }
 
-// let projectButtons = [
-//     {
-//         name: 'General',
-//         id: 'generalProjectBtn',
-//         src: projectIcon,
-//         onClick: null,
-//     },
-//     {
-//         name: 'Fitness',
-//         id: 'fitnessProjectBtn',
-//         src: projectIcon,
-//         onClick: null,
-//     },
-//     {
-//         name: 'School',
-//         id: 'schoolProjectBtn',
-//         src: projectIcon,
-//         onClick: null,
-//     },
-// ];
-
 const getTodaysDate = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -591,7 +561,7 @@ const getTodaysDate = () => {
     const dd = String(today.getDate()).padStart(2, '0');
 
     const formatted = `${yyyy}-${mm}-${dd}`;
-    console.log(formatted); // "2025-08-18"
+    console.log(formatted);
 
     return formatted;
 };
