@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Button from './Button';
 import Icon from './Icon';
-import CheckButton from './CheckButton';
 
 export default function Task({ task, projects, handleDeleteTask, handleEdit }) {
     const [isClicked, setIsClicked] = useState(false);
@@ -28,41 +27,6 @@ export default function Task({ task, projects, handleDeleteTask, handleEdit }) {
                 />
             )}
         </>
-    );
-}
-
-export function TaskList({ tasks, projects, handleDeleteTask, handleEdit }) {
-    if (!tasks || tasks.length === 0) {
-        return <p>No tasks</p>;
-    }
-
-    console.log('TaskList Tasks:', tasks);
-    return (
-        <ul className="taskList">
-            {tasks.map((task, idx) => {
-                return (
-                    // <div>
-                    <li key={task.id ?? idx}>
-                        <CheckButton
-                            handleDeleteTask={handleDeleteTask}
-                            task={task}
-                        ></CheckButton>
-                        {/* <button
-                            onClick={() => handleDeleteTask(task.id)}
-                            id="taskIconBtn"
-                            aria-label="Delete"
-                        ></button> */}
-                        <Task
-                            task={task}
-                            projects={projects}
-                            handleDeleteTask={handleDeleteTask}
-                            handleEdit={handleEdit}
-                        />
-                    </li>
-                    // </div>
-                );
-            })}
-        </ul>
     );
 }
 

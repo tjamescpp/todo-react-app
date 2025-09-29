@@ -1,5 +1,5 @@
 // components/LoadingSpinner.js
-export const LoadingSpinner = ({ size = 30, color = 'black' }) => {
+export default function LoadingSpinner({ size = 30, color = 'black' }) {
     const spinnerStyle = {
         width: `${size}px`,
         height: `${size}px`,
@@ -10,7 +10,6 @@ export const LoadingSpinner = ({ size = 30, color = 'black' }) => {
     };
 
     return (
-        // <div class="overlay">
         <div
             style={{
                 display: 'flex',
@@ -31,6 +30,5 @@ export const LoadingSpinner = ({ size = 30, color = 'black' }) => {
                 }
             `}</style>
         </div>
-        // </div>
     );
-};
+}

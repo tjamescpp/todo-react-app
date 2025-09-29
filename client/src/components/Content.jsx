@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
 import ToDoList from './ToDoList.jsx';
 import TaskForm from './TaskForm.jsx';
-import { TaskList } from './Task.jsx';
-import Project, { ProjectHeader } from './Project.jsx';
-import { LoadingSpinner } from './LoadingSpinner.jsx';
+import TaskList from './TaskList.jsx';
+import Project from './Project.jsx';
+import ProjectHeader from './ProjectHeader.jsx';
+import LoadingSpinner from './LoadingSpinner.jsx';
 import Dashboard from './Dashboard.jsx';
 
 export default function Content({
@@ -48,70 +49,63 @@ export default function Content({
 
     const handleCancel = (e) => {
         e.preventDefault();
-        console.log('Cancel clicked...');
         setIsAddTask(false);
         setIsEditTask(false);
     };
 
     const handleEditTask = async (task, oldProjectId) => {
-        console.log('Editing task:', task);
         try {
             const res = await fetch(`http://localhost:3000/tasks/${task.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: task.title,
-                    text: task.text,
-                    projectId: task.projectId,
-                    dueDate: task.dueDate,
-                    priority: task.priority,
-                }),
+                body: JSON.stringify(task),
             });
 
             const updatedTask = await res.json();
-            updateProjectTasks(updatedTask, isEditTask, oldProjectId);
+            editProjectTasks(updatedTask, isEditTask, oldProjectId);
 
             setTasks((prevTasks) => prevTasks.filter((t) => t.id !== task.id));
             setTasks((prevTasks) => [...prevTasks, updatedTask]);
             setIsEditTask(false);
-            console.log('Edited task:', updatedTask);
         } catch (error) {
             console.error('Failed to edit task...', error);
         }
     };
 
     const handleEditClicked = async (taskId, handleClose) => {
-        console.log('Edit clicked...');
         const task = tasks.find((task) => task.id === taskId);
-        console.log('Edit task:', task);
         setEditTask(task);
         setIsEditTask(true);
-        console.log('Edit clicked status:', isEditTask);
         handleClose();
     };
 
     const handleAddTask = async (newTask) => {
-        console.log('All Tasks:', tasks);
-        console.log('Adding task:', newTask);
         try {
             const res = await fetch(`http://localhost:3000/tasks/${user.id}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: newTask.title,
-                    text: newTask.text,
-                    projectId: newTask.projectId,
-                    dueDate: newTask.dueDate,
-                    priority: newTask.priority,
-                }),
+                body: JSON.stringify(newTask),
             });
 
             if (res.ok) {
                 const createdTask = await res.json();
-                updateProjectTasks(createdTask);
+                const createdTaskProject = projects.find(
+                    (project) => project.id === newTask.projectId
+                );
+                setProjects((prevProjects) =>
+                    prevProjects.map((project) =>
+                        project.id === newTask.projectId
+                            ? {
+                                  ...addProjectTask(
+                                      createdTaskProject,
+                                      createdTask
+                                  ),
+                              }
+                            : project
+                    )
+                );
                 setTasks((prevTasks) => [...prevTasks, createdTask]);
                 setIsAddTask(false);
-                console.log('New task created:', createdTask);
             }
         } catch (error) {
             console.error('Failed to create task...', error);
@@ -123,18 +117,12 @@ export default function Content({
 
         // get project id
         const projectId = tasks.find((task) => task.id === taskId).projectId;
-        console.log('Deleting taskId:', taskId);
 
         // Optimistically remove task from project
         setProjects((prevProjects) =>
             prevProjects.map((project) =>
                 project.id === projectId
-                    ? {
-                          ...project,
-                          tasks: project.tasks.filter(
-                              (task) => task.id !== taskId
-                          ),
-                      }
+                    ? removeTaskFromProject(project, taskId)
                     : project
             )
         );
@@ -160,23 +148,16 @@ export default function Content({
         );
 
         // update project project tasks to default projectId
-        const updatedTasks = tasks.map((task) => {
+        tasks.map((task) => {
             if (task.projectId === project.id) {
                 task.projectId = 1;
             }
         });
-        console.log('Updated tasks:', updatedTasks);
 
-        console.log('Delete project id:', project.id);
-        const res = await fetch(
-            `http://localhost:3000/projects/${project.id}`,
-            {
-                method: 'DELETE',
-            }
-        );
-
-        const deletedProject = await res.json();
-        console.log('Deleted project:', deletedProject);
+        // delete project request
+        await fetch(`http://localhost:3000/projects/${project.id}`, {
+            method: 'DELETE',
+        });
 
         setProjects(projects.filter((project) => project.name !== projectName));
         projectButtons = projectButtons.filter(
@@ -188,7 +169,7 @@ export default function Content({
 
     // helper function for sidebar project buttons
     // displays project by name that equals the status
-    function displayProjectByName() {
+    const displayProjectByName = () => {
         return projects
             .filter((project) => project.name === status)
             .map((project) => (
@@ -204,84 +185,75 @@ export default function Content({
                     />
                 </div>
             ));
-    }
+    };
 
-    function updateProjectTasks(newTask, isEditTask, oldProjectId) {
+    const editProjectTasks = (newTask, isEditTask, oldProjectId) => {
         setProjects((prevProjects) =>
             prevProjects.map((project) => {
-                // 📌 If editing and project changed: remove from old project
+                // If editing and project changed: remove from old project
                 if (
                     isEditTask &&
                     project.id === oldProjectId &&
                     oldProjectId !== newTask.projectId
                 ) {
-                    console.log(
-                        '🗑️ Removing task from old project:',
-                        project.name
-                    );
-
-                    return {
-                        ...project,
-                        tasks: project.tasks.filter(
-                            (task) => task.id !== newTask.id
-                        ),
-                    };
+                    return removeTaskFromProject(project, newTask.id);
                 }
 
-                // 📌 If editing within the same project: update the task
+                // If editing within the same project: update the task
                 if (
                     isEditTask &&
                     project.id === newTask.projectId &&
                     oldProjectId === newTask.projectId
                 ) {
-                    console.log('✏️ Updating task in project:', project.name);
-
-                    return {
-                        ...project,
-                        tasks: project.tasks.map((task) =>
-                            task.id === newTask.id
-                                ? { ...task, ...newTask }
-                                : task
-                        ),
-                    };
+                    return updateProjectTasks(project, newTask);
                 }
 
-                // 📌 If editing and project changed: add to new project
+                // If editing and project changed: add to new project
                 if (
                     isEditTask &&
                     project.id === newTask.projectId &&
                     oldProjectId !== newTask.projectId
                 ) {
-                    console.log('📌 Adding task to new project:', project.name);
-
-                    return {
-                        ...project,
-                        tasks: [...project.tasks, newTask],
-                    };
+                    return addProjectTask(project, newTask);
                 }
 
-                // 📌 Adding a brand-new task (not editing)
+                // Adding a brand-new task (not editing)
                 if (!isEditTask && project.id === newTask.projectId) {
-                    console.log('➕ Adding new task to project:', project.name);
-
-                    return {
-                        ...project,
-                        tasks: project.tasks
-                            ? [...project.tasks, newTask]
-                            : [newTask],
-                    };
+                    return addProjectTask(project, newTask);
                 }
 
-                return project; // unchanged project
+                return project;
             })
         );
-    }
+    };
+
+    const addProjectTask = (project, newTask) => {
+        return {
+            ...project,
+            tasks: project.tasks ? [...project.tasks, newTask] : [newTask],
+        };
+    };
+
+    const updateProjectTasks = (project, newTask) => {
+        return {
+            ...project,
+            tasks: project.tasks.map((task) =>
+                task.id === newTask.id ? { ...task, ...newTask } : task
+            ),
+        };
+    };
+
+    const removeTaskFromProject = (project, taskId) => {
+        return {
+            ...project,
+            tasks: project.tasks.filter((task) => task.id !== taskId),
+        };
+    };
 
     return (
         <div id="content" ref={contentRef}>
             {(isAddTask || isEditTask) && (
                 <>
-                    {console.log('Task form project:', addTaskProject)}
                     <TaskForm
                         projects={projects}
                         handleCancel={handleCancel}
@@ -374,9 +346,6 @@ const getTodaysDate = () => {
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
-
     const formatted = `${yyyy}-${mm}-${dd}`;
-    console.log(formatted);
-
     return formatted;
 };

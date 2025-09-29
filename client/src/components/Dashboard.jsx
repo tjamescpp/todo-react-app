@@ -1,6 +1,4 @@
-import Project, { ProjectHeader } from './Project';
-import { TaskList } from './Task';
-
+import Project from './Project';
 export default function Dashboard({
     tasks,
     projects,

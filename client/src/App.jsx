@@ -21,22 +21,20 @@ function App() {
         } else {
             setLoading(false);
             setUser(users[0]);
-            console.log('All data:', users, tasks, projects);
+            console.log('Users:', users);
+            console.log('Tasks:', tasks);
+            console.log('Projects:', projects);
         }
-    }, [users, tasks, projects]);
+    }, [users, user, tasks, projects]);
 
     const handleProjectButton = (e) => {
         const projectName = e.target.textContent;
-        console.log(`Clicked on ${projectName} button`);
-
         projectName.toLowerCase() === 'my projects'
             ? setStatus('projects')
             : setStatus(projectName);
     };
 
     const handleAddTaskClicked = (e) => {
-        console.log('Add task clicked...');
-
         const projectName = e.target.id;
         !projectName || projectName === 'All'
             ? setAddTaskProject('Project')

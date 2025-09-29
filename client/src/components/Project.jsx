@@ -1,8 +1,8 @@
 import Button from './Button';
 import Icon from './Icon';
 import { useState } from 'react';
-import { TaskList } from './Task';
-// import { useEffect } from 'react';
+import TaskList from './TaskList';
+import ProjectHeader from './ProjectHeader';
 
 const icons = {
     expand: '/icons/menu-down.svg',
@@ -82,26 +82,5 @@ export default function Project({
             />
             {showTaskList()}
         </div>
-    );
-}
-
-export function ProjectHeader({ projectName, taskCount, iconSrc, onClick }) {
-    return (
-        <>
-            <div id="projectHeader">
-                {iconSrc && (
-                    <Button className="listExpandCollapse" onClick={onClick}>
-                        <Icon
-                            className="contentIcons"
-                            src={iconSrc}
-                            alt="Expand-Collapse"
-                            id="expandCollapseIcon"
-                        ></Icon>
-                    </Button>
-                )}
-                <p id="projectTitle">{projectName}</p>
-                <p id="projectTaskCount">{taskCount}</p>
-            </div>
-        </>
     );
 }
