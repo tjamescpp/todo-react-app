@@ -26,8 +26,12 @@ export default function Content({
     const [editTask, setEditTask] = useState(null);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
-
     const contentRef = useRef(null);
+
+    // Express REST API url environment variable
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const TASKS_API_URL = `${API_URL}/tasks`;
+    const PROJECTS_API_URL = `${API_URL}/projects`;
 
     // adds a bottom border to the content header when the page scrolls
     useEffect(() => {
@@ -55,7 +59,7 @@ export default function Content({
 
     const handleEditTask = async (task, oldProjectId) => {
         try {
-            const res = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+            const res = await fetch(`${TASKS_API_URL}/${task.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(task),
@@ -81,7 +85,7 @@ export default function Content({
 
     const handleAddTask = async (newTask) => {
         try {
-            const res = await fetch(`http://localhost:3000/tasks/${user.id}`, {
+            const res = await fetch(`${TASKS_API_URL}/${user.id}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newTask),
@@ -131,7 +135,7 @@ export default function Content({
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
 
         try {
-            await fetch(`http://localhost:3000/tasks/${taskId}`, {
+            await fetch(`${TASKS_API_URL}/${taskId}`, {
                 method: 'DELETE',
             });
         } catch (error) {
@@ -155,7 +159,7 @@ export default function Content({
         });
 
         // delete project request
-        await fetch(`http://localhost:3000/projects/${project.id}`, {
+        await fetch(`${PROJECTS_API_URL}/${project.id}`, {
             method: 'DELETE',
         });
 
