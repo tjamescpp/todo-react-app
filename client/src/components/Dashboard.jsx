@@ -16,15 +16,9 @@ export default function Dashboard({
 
     return (
         <>
-            {/* <ProjectHeader projectName="Dashboard" taskCount={tasks.length} />
-            <TaskList
-                tasks={tasks}
-                handleTaskDeleted={handleDeleteTask}
-                handleEdit={handleEdit}
-            /> */}
             <Project
                 project={newProject}
-                allProjects={projects}
+                projects={projects}
                 handleDeleteTask={handleDeleteTask}
                 handleEdit={handleEdit}
                 handleAddTask={handleAddTaskClick}
@@ -33,7 +27,7 @@ export default function Dashboard({
                 <div key={`${project.id}Key`}>
                     <Project
                         project={project}
-                        allProjects={projects}
+                        projects={projects}
                         handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEdit}
                         handleAddTask={handleAddTaskClick}

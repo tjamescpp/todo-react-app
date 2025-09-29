@@ -12,6 +12,7 @@ export default function TaskForm({
 }) {
     const [isDropdown, setIsDropdown] = useState(false);
     const [projectValue, setProjectValue] = useState(projectName);
+    const [oldProjectId, setOldProjectId] = useState(null);
     const [form, setForm] = useState({
         title: '',
         text: '',
@@ -31,10 +32,12 @@ export default function TaskForm({
         }
     }, [task, projects, projectValue]);
 
-    // when editing, load values from task into state
+    // if task exists then it's an edit
+    // load values from task into state
     useEffect(() => {
         if (task) {
             console.log('Editing task:', task);
+            setOldProjectId(task.projectId);
 
             // find project using the task's projectId
             const project = projects.find(
@@ -61,10 +64,20 @@ export default function TaskForm({
             alert('Title must be less than max characters');
         }
 
-        handleConfirm({
-            ...task, // keep existing id if editing
-            ...form, // copy form object
-        });
+        if (task) {
+            // if editing, it will call handleEditTask and pass the old project id in case the task's project gets changed
+            handleConfirm(
+                {
+                    ...task, // keep existing id if editing
+                    ...form, // copy form object
+                },
+                oldProjectId
+            );
+        } else {
+            handleConfirm({
+                ...form, // copy form object
+            });
+        }
     };
 
     const handleProjectDropdown = () => {

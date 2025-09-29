@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 export const useAllData = () => {
-    const [tasks, setTasks] = useState();
-    const [users, setUsers] = useState();
-    const [projects, setProjects] = useState();
+    const [tasks, setTasks] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [projects, setProjects] = useState([]);
 
     // REST API url environment variable
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -33,5 +33,5 @@ export const useAllData = () => {
         dataFetch();
     }, [API_URL]);
 
-    return { users, tasks, projects };
+    return { users, tasks, projects, setUsers, setTasks, setProjects };
 };

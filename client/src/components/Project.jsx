@@ -11,7 +11,7 @@ const icons = {
 
 export default function Project({
     project,
-    allProjects,
+    projects,
     handleDeleteTask,
     handleEdit,
     handleAddTask,
@@ -32,7 +32,7 @@ export default function Project({
                 <>
                     <TaskList
                         tasks={project.tasks}
-                        projects={allProjects}
+                        projects={projects}
                         handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEdit}
                     />
