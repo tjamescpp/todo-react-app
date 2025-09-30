@@ -100,7 +100,7 @@ export default function TaskForm({
                         <input
                             id="taskTitleInput"
                             type="text"
-                            maxLength={30}
+                            maxLength={50}
                             placeholder="Take the dog for a walk"
                             value={form.title ?? ''}
                             onChange={(e) =>

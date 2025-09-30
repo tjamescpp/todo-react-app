@@ -11,7 +11,6 @@ export default function TaskList({
         return <p>No tasks</p>;
     }
 
-    console.log('TaskList Tasks:', tasks);
     return (
         <ul className="taskList">
             {tasks.map((task, idx) => {

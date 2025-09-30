@@ -4,6 +4,7 @@ import SidebarHeader from './SidebarHeader';
 import SidebarList from './SidebarList';
 import Button from './Button';
 import Icon from './Icon';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function Sidebar({
     user,
@@ -171,6 +172,7 @@ export default function Sidebar({
                     <input
                         id="newProjectInput"
                         type="text"
+                        max={30}
                         placeholder="Name"
                         value={newProjectName}
                         onChange={(e) => setNewProjectName(e.target.value)}

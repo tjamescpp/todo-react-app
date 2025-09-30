@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Project from './Project';
 export default function Dashboard({
     tasks,
@@ -6,6 +7,12 @@ export default function Dashboard({
     handleEdit,
     handleAddTaskClick,
 }) {
+    useEffect(() => {
+        console.log('Dashboard:');
+        console.log('Tasks:', tasks);
+        console.log('Projects:', projects);
+    }, [tasks, projects]);
+
     const newProject = {
         id: crypto.randomUUID(),
         name: 'All',

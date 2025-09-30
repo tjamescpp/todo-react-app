@@ -1,15 +1,20 @@
 import express from 'express';
-import { PrismaClient } from './generated/prisma/index.js';
 import routes from './routes/index.js';
-// import usersRouter from './routes/users.js';
 import prisma from './prisma.js';
 import cors from 'cors';
+import session from 'express-session';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 
 const app = express();
 
 // body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// authentication
+app.use(session({ secret: 'cats', resave: false, saveUninitialized: false }));
+app.use(passport.session());
 
 // cors
 app.use(

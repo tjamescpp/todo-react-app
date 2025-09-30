@@ -74,6 +74,8 @@ export default function Content({
         } catch (error) {
             console.error('Failed to edit task...', error);
         }
+
+        return true;
     };
 
     const handleEditClicked = async (taskId, handleClose) => {
@@ -114,6 +116,8 @@ export default function Content({
         } catch (error) {
             console.error('Failed to create task...', error);
         }
+
+        return true;
     };
 
     const handleDeleteTask = async (taskId) => {
@@ -143,6 +147,8 @@ export default function Content({
             // only re-render if the delete fails so it doesn't re-render twice
             setProjects(prevProjects);
         }
+
+        return true;
     };
 
     const handleDeleteProject = async (projectName) => {
@@ -169,11 +175,15 @@ export default function Content({
         );
 
         setStatus('dashboard');
+        return true;
     };
 
     // helper function for sidebar project buttons
     // displays project by name that equals the status
     const displayProjectByName = () => {
+        const project = projects.filter((project) => project.name === status);
+        console.log('Project button:', project);
+
         return projects
             .filter((project) => project.name === status)
             .map((project) => (
