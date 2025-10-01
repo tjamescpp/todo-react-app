@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function SignUp({ setStatus, setUsers }) {
+export default function SignUp({ setStatus }) {
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',
@@ -11,7 +11,7 @@ export default function SignUp({ setStatus, setUsers }) {
 
     // Express REST API url environment variable
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-    const USERS_API_URL = `${API_URL}/users`;
+    const USERS_REGISTER_API_URL = `${API_URL}/users/register`;
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -19,13 +19,14 @@ export default function SignUp({ setStatus, setUsers }) {
         setStatus('dashboard');
 
         try {
-            const res = await fetch(USERS_API_URL, {
+            const res = await fetch(USERS_REGISTER_API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
             });
             const user = await res.json();
-            setUsers((prevUsers) => [...prevUsers, user]);
+            console.log('Signed up:', user);
+            // setUsers((prevUsers) => [...prevUsers, user]);
         } catch (error) {
             console.error('Failed to create user...', error);
         }
@@ -65,7 +66,7 @@ export default function SignUp({ setStatus, setUsers }) {
                 <div className="signUpInput">
                     <label htmlFor="email">Email</label>
                     <input
-                        id="email"
+                        id="signUpEmail"
                         name="email"
                         placeholder="Enter your email..."
                         type="email"
@@ -89,7 +90,7 @@ export default function SignUp({ setStatus, setUsers }) {
                 <div className="signUpInput">
                     <label htmlFor="password">Password</label>
                     <input
-                        id="password"
+                        id="signUpPassword"
                         name="password"
                         placeholder="Create a password..."
                         type="password"
@@ -106,6 +107,19 @@ export default function SignUp({ setStatus, setUsers }) {
                     Sign Up
                 </button>
             </form>
+            <p>
+                Already registered?{' '}
+                <a
+                    href="#"
+                    style={{ color: 'var(--button-red)' }}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setStatus('login');
+                    }}
+                >
+                    Go to login
+                </a>
+            </p>
         </div>
     );
 }

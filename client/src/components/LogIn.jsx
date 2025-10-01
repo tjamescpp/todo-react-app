@@ -1,14 +1,38 @@
-export default function LogIn({ setStatus }) {
-    const handleLogIn = (e) => {
+import { useState } from 'react';
+
+export default function Login({ setUser, setStatus }) {
+    const [form, setForm] = useState({
+        email: '',
+        password: '',
+    });
+
+    // Express REST API url environment variable
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+    const handleLogIn = async (e) => {
         e.preventDefault();
-        setStatus('dashboard');
+
+        const res = await fetch(`${API_URL}/users/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form),
+            credentials: 'include', // important for sessions
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+
+            setUser(data.user);
+        } else {
+            alert('Login failed');
+        }
     };
 
     return (
         <div id="logIn">
             <h1>Tasker</h1>
             <h2>Log In</h2>
-            <form id="logInForm">
+            <form id="logInForm" onSubmit={handleLogIn}>
                 <div className="logInInput">
                     <label htmlFor="email">Email</label>
                     <input
@@ -16,6 +40,9 @@ export default function LogIn({ setStatus }) {
                         name="email"
                         placeholder="Enter your email..."
                         type="email"
+                        onChange={(e) =>
+                            setForm({ ...form, email: e.target.value })
+                        }
                     />
                 </div>
                 <div className="logInInput">
@@ -23,18 +50,30 @@ export default function LogIn({ setStatus }) {
                     <input
                         id="password"
                         name="password"
-                        placeholder="Create a password..."
+                        placeholder="Enter your password..."
                         type="password"
+                        onChange={(e) =>
+                            setForm({ ...form, password: e.target.value })
+                        }
                     />
                 </div>
-                <button
-                    id="logInBtn"
-                    type="submit"
-                    onClick={(e) => handleLogIn(e)}
-                >
+                <button id="logInBtn" type="submit">
                     Log In
                 </button>
             </form>
+            <p>
+                Not registered?{' '}
+                <a
+                    href="#"
+                    style={{ color: 'var(--button-red)' }}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setStatus('signup');
+                    }}
+                >
+                    Sign up
+                </a>
+            </p>
         </div>
     );
 }

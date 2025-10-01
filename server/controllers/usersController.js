@@ -1,4 +1,8 @@
+import passport from 'passport';
 import prisma from '../prisma.js';
+import { JWT_SECRET } from '../utils/auth.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 async function getAllUsers(req, res) {
     const allUsers = await prisma.user.findMany({
@@ -32,16 +36,19 @@ async function getUserById(req, res) {
             },
         });
 
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
         res.json(user);
     } catch (error) {
-        console.error('Failed to fetch user by id...');
+        console.log(error);
+        res.status(500).json({ error: 'Failed to fetch user data' });
     }
 }
 
 async function createUser(req, res) {
-    const { email, firstName, lastName, username, password } = req.body;
-
     try {
+        const { email, firstName, lastName, username } = req.body;
+        const hashed = await bcrypt.hash(req.body.password, 10);
         const result = await prisma.$transaction(async (tx) => {
             // create user
             const user = await tx.user.create({
@@ -50,7 +57,7 @@ async function createUser(req, res) {
                     firstName,
                     lastName,
                     username,
-                    password,
+                    password: hashed,
                 },
             });
 
@@ -94,12 +101,40 @@ async function createUser(req, res) {
 }
 
 async function updateUser(req, res) {
-    const user = await prisma.user.update({
-        where: { id: Number(req.params.userId) },
-        data: { email: req.body.email },
-    });
+    try {
+        const { userId } = req.params;
 
-    res.json(user);
+        // only allowed fields can be updated
+        const allowedFields = [
+            'firstName',
+            'lastName',
+            'email',
+            'username',
+            'password',
+        ];
+        const data = {};
+
+        for (const field of allowedFields) {
+            if (req.body[field] !== undefined) {
+                data[field] = req.body[field];
+            }
+        }
+
+        // hash password if it exists
+        if (data.password) {
+            const salt = await bcrypt.genSalt(10);
+            data.password = await bcrypt.hash(data.password, salt);
+        }
+
+        const user = await prisma.user.update({
+            where: { id: Number(userId) },
+            data, // only updates fields provided in the body
+        });
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update user' });
+    }
 }
 
 async function deleteUser(req, res) {
@@ -114,10 +149,45 @@ async function deleteUser(req, res) {
     }
 }
 
+// login and issue JWT
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user)
+            return res.status(400).json({ message: 'Invalid credentials' });
+
+        const isMatch = bcrypt.compare(password, user.password);
+        if (!isMatch)
+            return res.status(400).json({ message: 'Invalid credentials' });
+
+        const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+            expiresIn: '1d',
+        });
+
+        res.json({
+            token,
+            user: { id: user.id, email: user.email, username: user.username },
+        });
+    } catch (error) {
+        console.log('loginUser function...');
+        console.error(error);
+        res.status(500).json({ error: 'Login failed' });
+    }
+};
+
+// get current user (protected)
+function getProfile(req, res) {
+    res.json({ user: req.user });
+}
+
 export default {
     createUser,
     getAllUsers,
     getUserById,
     updateUser,
     deleteUser,
+    loginUser,
+    getProfile,
 };

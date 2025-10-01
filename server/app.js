@@ -1,20 +1,15 @@
 import express from 'express';
+import session from 'express-session';
+import { passport } from './utils/auth.js';
 import routes from './routes/index.js';
 import prisma from './prisma.js';
 import cors from 'cors';
-import session from 'express-session';
-import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
 
 const app = express();
 
 // body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// authentication
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: false }));
-app.use(passport.session());
 
 // cors
 app.use(
@@ -24,8 +19,21 @@ app.use(
     })
 );
 
+// session store
+app.use(
+    session({
+        secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized: false,
+    })
+);
+
+// passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 // routes
-app.get('/', (req, res) => res.send('Hello, world!'));
+// app.get('/', (req, res) => res.send('Hello, world!'));
 app.use('/users', routes.usersRouter);
 app.use('/tasks', routes.tasksRouter);
 app.use('/projects', routes.projectsRouter);
