@@ -1,13 +1,10 @@
 import { useState } from 'react';
 
-export default function Login({ setStatus, loadUserData }) {
+export default function Login({ API_URL, setStatus, loadUserData }) {
     const [form, setForm] = useState({
         email: '',
         password: '',
     });
-
-    // Express REST API url environment variable
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
     const handleLogin = async (e) => {
         e.preventDefault();

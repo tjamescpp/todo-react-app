@@ -1,4 +1,5 @@
 import './App.css';
+import process from 'process';
 import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import projectIcon from '/icons/pound.svg';
@@ -18,7 +19,10 @@ function App() {
     const [loading, setLoading] = useState(false);
 
     // Express REST API url environment variable
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const API_URL =
+        process.env.NODE_ENV === 'production'
+            ? 'https://tasker-app-2n4e.onrender.com'
+            : 'http://localhost:3000';
 
     useEffect(() => {
         console.log('Status changed:', status);
@@ -107,9 +111,12 @@ function App() {
 
     return (
         <>
-            {status === 'signup' && <SignUp setStatus={setStatus} />}
+            {status === 'signup' && (
+                <SignUp API_URL={API_URL} setStatus={setStatus} />
+            )}
             {status === 'login' && (
                 <Login
+                    API_URL={API_URL}
                     setUser={setUser}
                     setStatus={setStatus}
                     loadUserData={loadUserData}
@@ -132,6 +139,7 @@ function App() {
                         onSearchResults={setSearchTaskResults}
                     />
                     <Content
+                        API_URL={API_URL}
                         user={user}
                         tasks={tasks}
                         setTasks={setTasks}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function SignUp({ setStatus }) {
+export default function SignUp({ API_URL, setStatus }) {
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',
@@ -9,17 +9,13 @@ export default function SignUp({ setStatus }) {
         password: '',
     });
 
-    // Express REST API url environment variable
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-    const USERS_REGISTER_API_URL = `${API_URL}/users/register`;
-
     const handleSignUp = async (e) => {
         e.preventDefault();
         console.log('Creating user:', form);
         setStatus('dashboard');
 
         try {
-            const res = await fetch(USERS_REGISTER_API_URL, {
+            const res = await fetch(`${API_URL}/users/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
