@@ -17,6 +17,7 @@ export default function Sidebar({
     projectButtons,
     handleProjectButton,
     handleAddTaskClicked,
+    handleLogout,
     onSearchResults,
 }) {
     const [searchFor, setSearchFor] = useState('');
@@ -184,6 +185,19 @@ export default function Sidebar({
                     buttons={projectButtons}
                 />
             </div>
+            <Button
+                className="sidebarBtn"
+                type="button"
+                id="logoutBtn"
+                onClick={handleLogout}
+            >
+                <Icon
+                    className="sidebarIcons"
+                    src="/icons/logout.svg"
+                    alt="plus"
+                />
+                <p>Logout</p>
+            </Button>
         </div>
     );
 }

@@ -23,33 +23,42 @@ function App() {
     // Express REST API url environment variable
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-    useEffect(() => {
-        if (user) {
-            // user is logged in, now fetch their data
+    // central function to load user data
+    // central function to load user data
+    const loadUserData = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch(`${API_URL}/users/me`, {
+                credentials: 'include', // send session cookie
+            });
+
+            if (!res.ok) {
+                setStatus('login');
+                setUser(null);
+                return;
+            }
+
+            const userData = await res.json();
+            setUser(userData);
+            setTasks(
+                userData.tasks?.map((task) => ({
+                    ...task,
+                    dueDate: dateUtils.toDateString(task.dueDate),
+                })) || []
+            );
+            setProjects(userData.projects || []);
             setStatus('dashboard');
-            setLoading(true);
-            console.log('Logged in...');
-            fetch(`${API_URL}/users/${user.id}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log(data);
-                    setTasks(
-                        data.tasks.map((task) => {
-                            // format due date
-                            return {
-                                ...task,
-                                dueDate: dateUtils.toDateString(task.dueDate),
-                            };
-                        }) || []
-                    );
-                    setProjects(data.projects);
-                })
-                .catch((error) =>
-                    console.error('Failed to fetch user data:', error)
-                )
-                .finally(setLoading(false));
+        } catch (err) {
+            console.error('Failed to load user data:', err);
+            setStatus('login');
+        } finally {
+            setLoading(false);
         }
-    }, [user, API_URL]);
+    };
+
+    useEffect(() => {
+        loadUserData();
+    }, []);
 
     const handleProjectButton = (e) => {
         const projectName = e.target.textContent;
@@ -68,6 +77,23 @@ function App() {
         setIsAddTask(true);
     };
 
+    const handleLogout = async (e) => {
+        e.preventDefault();
+
+        try {
+            await fetch(`${API_URL}/users/logout`, {
+                method: 'POST',
+                credentials: 'include', // include cookies/session
+            });
+            setUser(null); // clear user from state
+            setTasks([]);
+            setProjects([]);
+            setStatus('login'); // go back to login screen
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
+    };
+
     // create project buttons for the sidebar
     let projectButtons = projects.map((project, idx) => {
         return {
@@ -82,7 +108,11 @@ function App() {
         <>
             {status === 'signup' && <SignUp setStatus={setStatus} />}
             {status === 'login' && (
-                <Login setUser={setUser} setStatus={setStatus} />
+                <Login
+                    setUser={setUser}
+                    setStatus={setStatus}
+                    loadUserData={loadUserData}
+                />
             )}
             {status === 'dashboard' && (
                 <div id="container">
@@ -97,6 +127,7 @@ function App() {
                         projectButtons={projectButtons}
                         handleProjectButton={handleProjectButton}
                         handleAddTaskClicked={handleAddTaskClicked}
+                        handleLogout={handleLogout}
                         onSearchResults={setSearchTaskResults}
                     />
                     <Content

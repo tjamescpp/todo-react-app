@@ -133,6 +133,10 @@
     padding: 4px;
 }
 
+#logoutBtn {
+    margin-top: auto;
+}
+
 /* END OF SIDEBAR  */
 
 /* --- ADD TASK --- */

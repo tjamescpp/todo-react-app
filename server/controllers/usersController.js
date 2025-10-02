@@ -45,6 +45,31 @@ async function getUserById(req, res) {
     }
 }
 
+async function getCurrentUser(req, res) {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    try {
+        const currentUser = await prisma.user.findUnique({
+            where: { id: req.user.id },
+            include: {
+                tasks: true,
+                projects: {
+                    include: {
+                        tasks: true,
+                    },
+                },
+            },
+        });
+
+        res.json(currentUser);
+    } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        res.status(500).json({ error: 'Failed to fetch user data' });
+    }
+}
+
 async function createUser(req, res) {
     try {
         const { email, firstName, lastName, username } = req.body;
@@ -149,6 +174,13 @@ async function deleteUser(req, res) {
     }
 }
 
+async function logoutUser(req, res) {
+    req.logout((error) => {
+        if (error) return res.status(500).json({ error: 'Failed to logout' });
+        res.json({ message: 'Logged out successfully' });
+    });
+}
+
 // login and issue JWT
 const loginUser = async (req, res) => {
     try {
@@ -189,5 +221,7 @@ export default {
     updateUser,
     deleteUser,
     loginUser,
+    logoutUser,
     getProfile,
+    getCurrentUser,
 };

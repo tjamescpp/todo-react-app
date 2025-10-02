@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Login({ setUser, setStatus }) {
+export default function Login({ setStatus, loadUserData }) {
     const [form, setForm] = useState({
         email: '',
         password: '',
@@ -9,22 +9,28 @@ export default function Login({ setUser, setStatus }) {
     // Express REST API url environment variable
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-    const handleLogIn = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
 
-        const res = await fetch(`${API_URL}/users/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form),
-            credentials: 'include', // important for sessions
-        });
+        try {
+            const res = await fetch(`${API_URL}/users/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+                credentials: 'include', // important for sessions
+            });
 
-        if (res.ok) {
-            const data = await res.json();
+            if (res.ok) {
+                // const data = await res.json();
 
-            setUser(data.user);
-        } else {
-            alert('Login failed');
+                // setUser(data.user);
+                // setStatus('dashboard');
+                await loadUserData();
+            } else {
+                alert('Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
         }
     };
 
@@ -32,7 +38,7 @@ export default function Login({ setUser, setStatus }) {
         <div id="logIn">
             <h1>Tasker</h1>
             <h2>Log In</h2>
-            <form id="logInForm" onSubmit={handleLogIn}>
+            <form id="logInForm" onSubmit={handleLogin}>
                 <div className="logInInput">
                     <label htmlFor="email">Email</label>
                     <input

@@ -5,25 +5,16 @@ import { authMiddleware } from '../utils/auth.js';
 const router = Router();
 
 router.get('/', usersController.getAllUsers);
+// protected route to get logged in user
+router.get('/me', usersController.getCurrentUser);
 router.get('/:userId', usersController.getUserById);
-router.get(
-    '/me',
-    passport.authenticate('jwt', { session: false }),
-    usersController.getProfile
-);
 router.post('/register', usersController.createUser);
 // login route
 router.post('/login', passport.authenticate('local'), (req, res) => {
     res.json({ message: 'Logged in', user: req.user });
 });
-// protected route to get logged in user
-router.get('/me', (req, res) => {
-    if (!req.user) {
-        return res.status(401).json({ error: 'Not authenticated' });
-    }
-    res.json(req.user);
-});
 router.put('/:userId', usersController.updateUser);
 router.delete('/:userId', usersController.deleteUser);
+router.post('/logout', usersController.logoutUser);
 
 export default router;
