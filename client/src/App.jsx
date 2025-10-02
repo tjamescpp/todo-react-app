@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar.jsx';
 import projectIcon from '/icons/pound.svg';
 import Content from './components/Content.jsx';
 import SignUp from './components/SignUp.jsx';
-import Login from './components/Login.jsx';
+import LogIn from './components/LogIn.jsx';
 import { dateUtils } from '../../client/utils/dateUtils.js';
 
 function App() {
@@ -115,7 +115,7 @@ function App() {
                 <SignUp API_URL={API_URL} setStatus={setStatus} />
             )}
             {status === 'login' && (
-                <Login
+                <LogIn
                     API_URL={API_URL}
                     setUser={setUser}
                     setStatus={setStatus}
