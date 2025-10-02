@@ -6,6 +6,7 @@ import Project from './Project.jsx';
 import ProjectHeader from './ProjectHeader.jsx';
 import LoadingSpinner from './LoadingSpinner.jsx';
 import Dashboard from './Dashboard.jsx';
+import Confirmation from './Confirmation.jsx';
 
 export default function Content({
     user,
@@ -26,6 +27,7 @@ export default function Content({
     const [editTask, setEditTask] = useState(null);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isEditTask, setIsEditTask] = useState(false);
+    const [deleteProject, setDeleteProject] = useState(null);
     const contentRef = useRef(null);
 
     // Express REST API url environment variable
@@ -50,6 +52,10 @@ export default function Content({
             contentEl.removeEventListener('scroll', handleScroll);
         };
     }, []);
+
+    useEffect(() => {
+        console.log('Content status:', status);
+    }, [status]);
 
     const handleCancel = (e) => {
         e.preventDefault();
@@ -151,7 +157,13 @@ export default function Content({
         return true;
     };
 
+    const handleDeleteProjectClicked = (projectName) => {
+        setDeleteProject(projectName);
+    };
+
     const handleDeleteProject = async (projectName) => {
+        console.log('Deleting...', projectName);
+
         // get the project by name
         const project = projects.find(
             (project) => project.name === projectName
@@ -181,11 +193,14 @@ export default function Content({
     // helper function for sidebar project buttons
     // displays project by name that equals the status
     const displayProjectByName = () => {
-        const project = projects.filter((project) => project.name === status);
+        console.log('Display project by name...');
+        const project = projects.filter(
+            (project) => project.name.toLowerCase() === status
+        );
         console.log('Project button:', project);
 
         return projects
-            .filter((project) => project.name === status)
+            .filter((project) => project.name.toLowerCase() === status)
             .map((project) => (
                 <div key={`${project.id}-key`}>
                     <Project
@@ -193,7 +208,7 @@ export default function Content({
                         projects={projects}
                         handleDeleteTask={handleDeleteTask}
                         handleEdit={handleEditClicked}
-                        handleDeleteProject={handleDeleteProject}
+                        handleDeleteProject={handleDeleteProjectClicked}
                         handleAddTask={handleAddTaskClicked}
                         projectView={true}
                     />
@@ -346,8 +361,16 @@ export default function Content({
                                 />
                             </>
                         )}
-                        {projects.some((project) => project.name === status) &&
-                            displayProjectByName()}
+                        {deleteProject && (
+                            <Confirmation
+                                setDeleteProject={setDeleteProject}
+                                handleDeleteProject={handleDeleteProject}
+                                projectName={deleteProject}
+                            />
+                        )}
+                        {projects.some(
+                            (project) => project.name.toLowerCase() === status
+                        ) && displayProjectByName()}
                     </ToDoList>
                 )}
             </div>

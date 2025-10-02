@@ -568,4 +568,33 @@ textarea {
     font-weight: bolder;
 }
 
+#confirmation {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    width: 300px;
+    height: 100px;
+    padding: 16px;
+}
+
+#confirmationBtn {
+    display: flex;
+    justify-content: space-between;
+}
+
+#confirmationDeleteBtn {
+    padding: 8px;
+    background-color: var(--button-red);
+    border-radius: 10px;
+}
+
+#confirmationCancelBtn {
+    padding: 8px;
+    border-radius: 10px;
+    background-color: var(--button-gray);
+}
+
 /* END OF CONTENT  */

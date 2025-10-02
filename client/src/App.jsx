@@ -1,6 +1,5 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-// import { useFetchUsers } from './hooks/useFetchUsers.js';
 import Sidebar from './components/Sidebar.jsx';
 import projectIcon from '/icons/pound.svg';
 import Content from './components/Content.jsx';
@@ -9,21 +8,22 @@ import Login from './components/Login.jsx';
 import { dateUtils } from '../../client/utils/dateUtils.js';
 
 function App() {
-    // const { users, setUsers } = useFetchUsers();
     const [tasks, setTasks] = useState([]);
     const [projects, setProjects] = useState([]);
     const [user, setUser] = useState(null);
     const [isAddTask, setIsAddTask] = useState(false);
-    const [status, setStatus] = useState('login');
+    const [status, setStatus] = useState(null);
     const [addTaskProject, setAddTaskProject] = useState(null);
     const [searchTaskResults, setSearchTaskResults] = useState([]);
     const [loading, setLoading] = useState(false);
-    // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // Express REST API url environment variable
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-    // central function to load user data
+    useEffect(() => {
+        console.log('Status changed:', status);
+    }, [status]);
+
     // central function to load user data
     const loadUserData = async () => {
         setLoading(true);
@@ -58,12 +58,13 @@ function App() {
 
     useEffect(() => {
         loadUserData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleProjectButton = (e) => {
-        const projectName = e.target.textContent;
+        const projectName = e.target.textContent.toLowerCase();
         console.log('Project button name:', projectName);
-        projectName.toLowerCase() === 'my projects'
+        projectName === 'my projects'
             ? setStatus('projects')
             : setStatus(projectName);
         console.log('Status:', status);
@@ -114,7 +115,7 @@ function App() {
                     loadUserData={loadUserData}
                 />
             )}
-            {status === 'dashboard' && (
+            {user && (
                 <div id="container">
                     <Sidebar
                         user={user}
