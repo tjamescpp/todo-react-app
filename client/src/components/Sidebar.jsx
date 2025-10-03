@@ -7,6 +7,7 @@ import Icon from './Icon';
 import LoadingSpinner from './LoadingSpinner';
 
 export default function Sidebar({
+    API_URL,
     user,
     tasks,
     projects,
@@ -74,20 +75,17 @@ export default function Sidebar({
                 const token = localStorage.getItem('token');
                 if (!token) return setStatus('login');
 
-                const res = await fetch(
-                    `http://localhost:3000/projects/${user.id}`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({
-                            name: newProjectName,
-                            userId: user.id,
-                        }),
-                    }
-                );
+                const res = await fetch(`${API_URL}/projects/${user.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        name: newProjectName,
+                        userId: user.id,
+                    }),
+                });
 
                 const newProject = await res.json();
                 setProjects((prevProjects) => [...prevProjects, newProject]);
