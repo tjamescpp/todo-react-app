@@ -14,14 +14,14 @@ export default function LogIn({ API_URL, setStatus, loadUserData }) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
-                credentials: 'include', // important for sessions
+                // credentials: 'include', // important for sessions
             });
 
+            const data = await res.json();
             if (res.ok) {
-                // const data = await res.json();
-
                 // setUser(data.user);
                 // setStatus('dashboard');
+                localStorage.setItem('token', data.token);
                 await loadUserData();
             } else {
                 alert('Login failed');

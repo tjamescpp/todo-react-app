@@ -1,6 +1,4 @@
-import passport from 'passport';
 import prisma from '../prisma.js';
-import { JWT_SECRET } from '../utils/auth.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -174,38 +172,33 @@ async function deleteUser(req, res) {
     }
 }
 
-async function logoutUser(req, res) {
-    req.logout((error) => {
-        if (error) return res.status(500).json({ error: 'Failed to logout' });
-        res.json({ message: 'Logged out successfully' });
-    });
-}
-
 // login and issue JWT
 const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
     try {
-        const { email, password } = req.body;
-
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user)
-            return res.status(400).json({ message: 'Invalid credentials' });
 
-        const isMatch = bcrypt.compare(password, user.password);
-        if (!isMatch)
-            return res.status(400).json({ message: 'Invalid credentials' });
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
 
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, {
-            expiresIn: '1d',
-        });
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
 
-        res.json({
-            token,
-            user: { id: user.id, email: user.email, username: user.username },
-        });
-    } catch (error) {
-        console.log('loginUser function...');
-        console.error(error);
-        res.status(500).json({ error: 'Login failed' });
+        // sign JWT
+        const token = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_SECRET, // put this in your .env
+            { expiresIn: '1h' }
+        );
+
+        res.json({ token, user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
     }
 };
 
@@ -221,7 +214,6 @@ export default {
     updateUser,
     deleteUser,
     loginUser,
-    logoutUser,
     getProfile,
     getCurrentUser,
 };

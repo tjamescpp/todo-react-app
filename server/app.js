@@ -1,6 +1,4 @@
 import express from 'express';
-import session from 'express-session';
-import { passport } from './utils/auth.js';
 import routes from './routes/index.js';
 import prisma from './prisma.js';
 import cors from 'cors';
@@ -22,26 +20,6 @@ app.use(
         credentials: true,
     })
 );
-
-// session store
-app.set('trust proxy', 1); // trust first proxy
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET || 'dev-secret',
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
-        },
-    })
-);
-
-// passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 // routes
 // app.get('/', (req, res) => res.send('Hello, world!'));

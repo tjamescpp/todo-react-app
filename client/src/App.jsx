@@ -27,9 +27,15 @@ function App() {
     // central function to load user data
     const loadUserData = async () => {
         setLoading(true);
+        const token = localStorage.getItem('token');
+        if (!token) return setStatus('login');
+
         try {
             const res = await fetch(`${API_URL}/users/me`, {
-                credentials: 'include', // send session cookie
+                // credentials: 'include', // send session cookie
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             if (!res.ok) {
@@ -80,19 +86,11 @@ function App() {
 
     const handleLogout = async (e) => {
         e.preventDefault();
-
-        try {
-            await fetch(`${API_URL}/users/logout`, {
-                method: 'POST',
-                credentials: 'include', // include cookies/session
-            });
-            setUser(null); // clear user from state
-            setTasks([]);
-            setProjects([]);
-            setStatus('login'); // go back to login screen
-        } catch (error) {
-            console.error('Logout failed', error);
-        }
+        localStorage.removeItem('token'); // remove JWT
+        setUser(null); // clear user state
+        setTasks([]);
+        setProjects([]);
+        setStatus('login'); // redirect to login
     };
 
     // create project buttons for the sidebar
