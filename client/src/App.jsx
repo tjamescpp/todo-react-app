@@ -114,6 +114,7 @@ function App() {
             {user && (
                 <div id="container">
                     <Sidebar
+                        API_URL={API_URL}
                         user={user}
                         tasks={tasks}
                         projects={projects}
