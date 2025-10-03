@@ -15,14 +15,13 @@ function App() {
     const [status, setStatus] = useState(null);
     const [addTaskProject, setAddTaskProject] = useState(null);
     const [searchTaskResults, setSearchTaskResults] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     // Express REST API url environment variable
     const API_URL = import.meta.env.VITE_API_URL;
 
     // central function to load user data
     const loadUserData = async () => {
-        setLoading(true);
         const token = localStorage.getItem('token');
         if (!token) return setStatus('login');
 
@@ -54,8 +53,6 @@ function App() {
         } catch (err) {
             console.error('Failed to load user data:', err);
             setStatus('login');
-        } finally {
-            setLoading(false);
         }
     };
 
