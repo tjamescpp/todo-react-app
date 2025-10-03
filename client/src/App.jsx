@@ -21,7 +21,7 @@ function App() {
     // Express REST API url environment variable
     const API_URL =
         process.env.NODE_ENV === 'production'
-            ? 'https://tasker-app-2n4e.onrender.com'
+            ? 'https://tasker-app-cfdu.onrender.com'
             : 'http://localhost:3000';
 
     useEffect(() => {
