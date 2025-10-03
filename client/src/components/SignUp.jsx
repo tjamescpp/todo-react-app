@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
-export default function SignUp({ API_URL, setStatus }) {
+export default function SignUp({ API_URL, loading, setLoading, setStatus }) {
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',
@@ -10,6 +11,7 @@ export default function SignUp({ API_URL, setStatus }) {
     });
 
     const handleSignUp = async (e) => {
+        setLoading(true);
         e.preventDefault();
         console.log('Creating user:', form);
         setStatus('dashboard');
@@ -20,9 +22,12 @@ export default function SignUp({ API_URL, setStatus }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
             });
+
             const user = await res.json();
-            console.log('Signed up:', user);
-            // setUsers((prevUsers) => [...prevUsers, user]);
+            if (res.ok) {
+                setLoading(false);
+                console.log('Signed up:', user);
+            }
         } catch (error) {
             console.error('Failed to create user...', error);
         }
@@ -95,13 +100,17 @@ export default function SignUp({ API_URL, setStatus }) {
                         }
                     />
                 </div>
-                <button
-                    id="signUpBtn"
-                    type="submit"
-                    onClick={(e) => handleSignUp(e)}
-                >
-                    Sign Up
-                </button>
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <button
+                        id="signUpBtn"
+                        type="submit"
+                        onClick={(e) => handleSignUp(e)}
+                    >
+                        Sign Up
+                    </button>
+                )}
             </form>
             <p>
                 Already registered?{' '}

@@ -49,10 +49,6 @@ export default function Content({
         };
     }, []);
 
-    useEffect(() => {
-        console.log('Content status:', status);
-    }, [status]);
-
     const handleCancel = (e) => {
         e.preventDefault();
         setIsAddTask(false);
@@ -61,9 +57,15 @@ export default function Content({
 
     const handleEditTask = async (task, oldProjectId) => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) return setStatus('login');
+
             const res = await fetch(`${API_URL}/tasks/${task.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
                 body: JSON.stringify(task),
             });
 
@@ -89,9 +91,15 @@ export default function Content({
 
     const handleAddTask = async (newTask) => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) return setStatus('login');
+
             const res = await fetch(`${API_URL}/tasks/${user.id}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
                 body: JSON.stringify(newTask),
             });
 
@@ -141,8 +149,12 @@ export default function Content({
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
 
         try {
+            const token = localStorage.getItem('token');
+            if (!token) return setStatus('login');
+
             await fetch(`${API_URL}/tasks/${taskId}`, {
                 method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` },
             });
         } catch (error) {
             console.error('Failed to delete task', error);
@@ -160,34 +172,45 @@ export default function Content({
     const handleDeleteProject = async (projectName) => {
         console.log('Deleting...', projectName);
 
-        // get the project by name
-        const project = projects.find(
-            (project) => project.name === projectName
-        );
+        try {
+            // get the project by name
+            const project = projects.find(
+                (project) => project.name === projectName
+            );
 
-        // update project project tasks to default projectId
-        tasks.map((task) => {
-            if (task.projectId === project.id) {
-                task.projectId = 1;
-            }
-        });
+            // update project project tasks to default projectId
+            tasks.map((task) => {
+                if (task.projectId === project.id) {
+                    task.projectId = 1;
+                }
+            });
 
-        // delete project request
-        await fetch(`${API_URL}/projects/${project.id}`, {
-            method: 'DELETE',
-        });
+            // delete project request
+            const token = localStorage.getItem('token');
+            if (!token) return setStatus('login');
 
-        setProjects(projects.filter((project) => project.name !== projectName));
-        projectButtons = projectButtons.filter(
-            (button) => button.name !== projectName
-        );
+            await fetch(`${API_URL}/projects/${project.id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` },
+            });
 
-        setStatus('dashboard');
+            setProjects(
+                projects.filter((project) => project.name !== projectName)
+            );
+            projectButtons = projectButtons.filter(
+                (button) => button.name !== projectName
+            );
+
+            setStatus('dashboard');
+        } catch (error) {
+            console.error('Failed to delete project...', error);
+        }
+
         return true;
     };
 
     // helper function for sidebar project buttons
-    // displays project by name that equals the status
+    // displays project by name if the status is set to that project's name
     const displayProjectByName = () => {
         console.log('Display project by name...');
         const project = projects.filter(

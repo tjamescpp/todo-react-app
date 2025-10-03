@@ -1,6 +1,13 @@
 import { useState } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
-export default function LogIn({ API_URL, setStatus, loadUserData }) {
+export default function LogIn({
+    API_URL,
+    setStatus,
+    loadUserData,
+    loading,
+    setLoading,
+}) {
     const [form, setForm] = useState({
         email: '',
         password: '',
@@ -8,21 +15,19 @@ export default function LogIn({ API_URL, setStatus, loadUserData }) {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+        setLoading(true);
         try {
             const res = await fetch(`${API_URL}/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
-                // credentials: 'include', // important for sessions
             });
 
             const data = await res.json();
             if (res.ok) {
-                // setUser(data.user);
-                // setStatus('dashboard');
                 localStorage.setItem('token', data.token);
                 await loadUserData();
+                setLoading(false);
             } else {
                 alert('Login failed');
             }
@@ -60,9 +65,13 @@ export default function LogIn({ API_URL, setStatus, loadUserData }) {
                         }
                     />
                 </div>
-                <button id="logInBtn" type="submit">
-                    Log In
-                </button>
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <button id="logInBtn" type="submit">
+                        Log In
+                    </button>
+                )}
             </form>
             <p>
                 Not registered?{' '}

@@ -15,14 +15,10 @@ function App() {
     const [status, setStatus] = useState(null);
     const [addTaskProject, setAddTaskProject] = useState(null);
     const [searchTaskResults, setSearchTaskResults] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Express REST API url environment variable
     const API_URL = import.meta.env.VITE_API_URL;
-
-    useEffect(() => {
-        console.log('Status changed:', status);
-    }, [status]);
 
     // central function to load user data
     const loadUserData = async () => {
@@ -45,6 +41,7 @@ function App() {
             }
 
             const userData = await res.json();
+            // setLoading(false);
             setUser(userData);
             setTasks(
                 userData.tasks?.map((task) => ({
@@ -113,6 +110,8 @@ function App() {
                     API_URL={API_URL}
                     setUser={setUser}
                     setStatus={setStatus}
+                    loading={loading}
+                    setLoading={setLoading}
                     loadUserData={loadUserData}
                 />
             )}
