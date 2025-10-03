@@ -26,9 +26,14 @@ app.use(
 // session store
 app.use(
     session({
-        secret: 'keyboard cat',
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        },
     })
 );
 
