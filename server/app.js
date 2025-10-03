@@ -22,7 +22,7 @@ app.use(
 );
 
 // handle preflight requests for all routes
-app.options(cors());
+app.options('/*path', cors());
 
 // routes
 // app.get('/', (req, res) => res.send('Hello, world!'));
