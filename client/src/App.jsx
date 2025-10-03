@@ -27,7 +27,6 @@ function App() {
 
         try {
             const res = await fetch(`${API_URL}/users/me`, {
-                // credentials: 'include', // send session cookie
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

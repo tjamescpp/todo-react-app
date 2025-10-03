@@ -10,19 +10,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // cors
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'https://tasker-v0h9.onrender.com',
+];
+
 app.use(
     cors({
-        origin: [
-            'http://localhost:5173',
-            'http://127.0.0.1:5173',
-            'https://tasker-v0h9.onrender.com',
-        ],
-        credentials: true,
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
     })
 );
-
-// handle preflight requests for all routes
-app.options('/*path', cors());
 
 // routes
 // app.get('/', (req, res) => res.send('Hello, world!'));
