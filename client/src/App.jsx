@@ -1,5 +1,4 @@
 import './App.css';
-import process from 'process';
 import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import projectIcon from '/icons/pound.svg';
@@ -19,10 +18,7 @@ function App() {
     const [loading, setLoading] = useState(false);
 
     // Express REST API url environment variable
-    const API_URL =
-        process.env.NODE_ENV === 'production'
-            ? 'https://tasker-app-cfdu.onrender.com'
-            : 'http://localhost:3000';
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         console.log('Status changed:', status);
