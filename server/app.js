@@ -21,6 +21,8 @@ app.use(
     })
 );
 
+app.options('*', cors());
+
 // routes
 // app.get('/', (req, res) => res.send('Hello, world!'));
 app.use('/users', routes.usersRouter);
