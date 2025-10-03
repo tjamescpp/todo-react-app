@@ -21,7 +21,8 @@ app.use(
     })
 );
 
-app.options('*', cors());
+// handle preflight requests for all routes
+app.options('/*', cors());
 
 // routes
 // app.get('/', (req, res) => res.send('Hello, world!'));
