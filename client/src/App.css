@@ -77,12 +77,13 @@
 #sidebarHeader {
     display: flex;
     align-items: center;
+    padding: 4px;
     gap: 8px;
 }
 
 #profilePic {
     width: 50%;
-    max-width: 40px;
+    max-width: 30px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     object-fit: cover;
