@@ -53,7 +53,8 @@ model User {
   firstName String?   @db.VarChar(50)
   lastName  String?   @db.VarChar(50)
   username  String    @db.VarChar(50)
-  password  String?   @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  picture   String?        
   tasks     Task[]    
   projects  Project[]
   profile   Profile? // one to one

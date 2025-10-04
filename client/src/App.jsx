@@ -99,7 +99,13 @@ function App() {
     return (
         <>
             {status === 'signup' && (
-                <SignUp API_URL={API_URL} setStatus={setStatus} />
+                <SignUp
+                    API_URL={API_URL}
+                    loading={loading}
+                    setLoading={setLoading}
+                    setStatus={setStatus}
+                    loadUserData={loadUserData}
+                />
             )}
             {status === 'login' && (
                 <LogIn

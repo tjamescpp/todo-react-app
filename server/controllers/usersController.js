@@ -1,6 +1,8 @@
 import prisma from '../prisma.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import cloudinary from '../utils/cloudinary.js';
+import streamifier from 'streamifier';
 
 async function getAllUsers(req, res) {
     const allUsers = await prisma.user.findMany({
@@ -70,8 +72,25 @@ async function getCurrentUser(req, res) {
 
 async function createUser(req, res) {
     try {
-        const { email, firstName, lastName, username } = req.body;
-        const hashed = await bcrypt.hash(req.body.password, 10);
+        const { email, firstName, lastName, username, password } = req.body;
+        const hashed = await bcrypt.hash(password, 10);
+        const file = req.file;
+        let pictureUrl;
+
+        if (file) {
+            const result = await new Promise((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    { folder: 'profile_pics' },
+                    (err, result) => {
+                        if (err) return reject(err);
+                        resolve(result);
+                    }
+                );
+                streamifier.createReadStream(file.buffer).pipe(uploadStream);
+            });
+            pictureUrl = result.secure_url;
+        }
+
         const result = await prisma.$transaction(async (tx) => {
             // create user
             const user = await tx.user.create({
@@ -80,11 +99,12 @@ async function createUser(req, res) {
                     firstName,
                     lastName,
                     username,
+                    picture: pictureUrl,
                     password: hashed,
                 },
             });
 
-            // create defaul project for user
+            // create default project for user
             const project = await tx.project.create({
                 data: {
                     name: 'General',
@@ -133,6 +153,7 @@ async function updateUser(req, res) {
             'lastName',
             'email',
             'username',
+            'picture',
             'password',
         ];
         const data = {};

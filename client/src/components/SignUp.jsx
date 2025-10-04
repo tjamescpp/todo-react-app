@@ -1,30 +1,42 @@
 import { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
-export default function SignUp({ API_URL, loading, setLoading, setStatus }) {
+export default function SignUp({
+    API_URL,
+    loading,
+    setLoading,
+    setStatus,
+    loadUserData,
+}) {
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',
         email: '',
         username: '',
         password: '',
+        picture: null,
     });
 
     const handleSignUp = async (e) => {
-        setLoading(true);
         e.preventDefault();
-        console.log('Creating user:', form);
-        setStatus('dashboard');
+
+        const data = new FormData();
+
+        Object.keys(form).forEach((key) => {
+            data.append(key, form[key]);
+        });
+
+        setLoading(true);
 
         try {
             const res = await fetch(`${API_URL}/users/register`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
+                body: data,
             });
 
             const user = await res.json();
             if (res.ok) {
+                await loadUserData();
                 setLoading(false);
                 console.log('Signed up:', user);
             }
@@ -39,7 +51,7 @@ export default function SignUp({ API_URL, loading, setLoading, setStatus }) {
         <div id="signUp">
             <h1>Tasker</h1>
             <h2>Sign Up</h2>
-            <form id="signUpForm">
+            <form id="signUpForm" encType="multipart/form-data">
                 <div className="signUpInput">
                     <label htmlFor="firstName">First Name</label>
                     <input
@@ -97,6 +109,18 @@ export default function SignUp({ API_URL, loading, setLoading, setStatus }) {
                         type="password"
                         onChange={(e) =>
                             setForm({ ...form, password: e.target.value })
+                        }
+                    />
+                </div>
+                <div className="signUpInput">
+                    <label htmlFor="picture">Picture</label>
+                    <input
+                        id="picture"
+                        name="picture"
+                        type="file"
+                        accept="image/jpeg"
+                        onChange={(e) =>
+                            setForm({ ...form, picture: e.target.files[0] })
                         }
                     />
                 </div>

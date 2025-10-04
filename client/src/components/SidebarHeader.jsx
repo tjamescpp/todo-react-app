@@ -5,7 +5,9 @@ export default function SidebarHeader({ user }) {
         <div id="sidebarHeader">
             <Icon
                 src={
-                    '/images/vecteezy_young-boy-face-illustration-design_9280306.svg'
+                    user.picture
+                        ? user.picture
+                        : '/icons/account-circle-outline.svg'
                 }
                 alt={'profilePic'}
                 id={'profilePic'}

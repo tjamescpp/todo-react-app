@@ -77,11 +77,15 @@
 #sidebarHeader {
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 
 #profilePic {
-    width: 55px;
-    height: 55px;
+    width: 50%;
+    max-width: 40px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 #notificationIcon {
