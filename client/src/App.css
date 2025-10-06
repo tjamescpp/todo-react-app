@@ -566,7 +566,14 @@ textarea {
 }
 
 .taskText {
+    display: flex;
+    justify-content: space-between;
     font-size: 0.8rem;
+}
+
+#priorityFlag {
+    width: 15px;
+    height: 15px;
 }
 
 .taskTitle {

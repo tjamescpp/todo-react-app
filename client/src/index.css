@@ -8,7 +8,7 @@
 :root {
     --main-bg: rgb(249, 246, 239);
     --button-gray: rgb(230, 230, 230);
-    --button-red: rgb(240, 115, 115);
+    --button-red: rgb(236, 104, 104);
     --button-red-hover: rgb(220, 50, 50);
     --card-shadow: 8px 8px 10px rgba(128, 128, 128, 0.3);
 }

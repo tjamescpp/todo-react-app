@@ -200,7 +200,7 @@ export default function Sidebar({
                     src="/icons/logout.svg"
                     alt="plus"
                 />
-                <p>Logout</p>
+                <p>Log out</p>
             </Button>
         </div>
     );
