@@ -1,4 +1,4 @@
-# Odin Todo React App
+# Task Management React App
 
 A full-stack task management application built with React on the frontend and
 Express + Prisma on the backend. Users can create accounts, authenticate with
