@@ -5,6 +5,13 @@ Express + Prisma on the backend. Users can create accounts, authenticate with
 JWT, manage projects, and organize tasks with due dates, priorities, and project
 assignments.
 
+Check out the app by going to this link: https://tasker-v0h9.onrender.com/
+
+- Username: 123@email.com
+- Password: tommy123
+
+Feel free to create, update, or delete tasks and projects!
+
 ## Features
 
 - User registration and login
